@@ -17,10 +17,9 @@
                 <time datetime="{{ page.date | date(format="%F") | safe }}">
                     {{ page.date | date(format="%F") }}
                 </time>
-                {% if page.extra.author -%}
-                  by {{ page.extra.author}}
+                {% if config.author -%}
+                  by {{ config.author }}
                 {%- endif %}
-                {{ " - " }}({{ page.reading_time }} min read)
             </div>
         </div>
     </header>

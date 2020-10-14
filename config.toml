@@ -51,6 +51,7 @@ taxonomies = []
 languages = []
 
 [extra]
+author = "someone"
 # Put all your custom variables here
 subtitle = "Laeith learning tools"
 copyright = "None"
