@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+
+# Ignore build files
+public
+
+.idea
+*.iml
+target
+output
+
+# pythons
+__pycache__
+*.pyc
