@@ -3,7 +3,12 @@
 .p-title {
   margin: 0;
   font-size: 4.4rem;
-  &__link {
-    color: $color-text;
+
+  a {
+    color: $color-title;
+  }
+
+  a:hover {
+    color: $color-title;
   }
 }

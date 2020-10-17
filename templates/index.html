@@ -58,7 +58,7 @@
         {%- endblock extra_head %}
 
     </head>
-    <body>
+    <body class="l-body">
         <a href="#main" class="skip-link p-screen-reader-text">Skip to content</a>
         {% block header -%}
         <header class="l-header">
@@ -80,41 +80,46 @@
                     {% if page.summary -%}
                     {{ post_macros::polish(content=page.summary) }}
                     {% else %}
-                    {{ post_macros::polish(content=page.content) | striptags | truncate(length=280) }}
+                    {{ post_macros::polish(content=page.content) | striptags | truncate(length=600) }}
                     {%- endif %}
                 </div>
                 <a href="{{ page.permalink }}" class="c-article__btn p-list-article__btn">Read more...</a>
             </article>
             {% endfor %}
             
-            <nav class="c-pagination p-pagination">
-                <div class="c-pagination__ctrl">
-                    <div class="c-pagination__newer">
-                        {% if paginator.previous -%}
-                        <a href="{{ paginator.previous }}">Newer</a>
-                        {%- endif %}
-                    </div>
-                    <div class="c-pagination__older">
-                        {% if paginator.next -%}
-                        <a href="{{ paginator.next }}">Older</a>
-                        {%- endif %}
-                    </div>
-                </div>
-                <span class="c-pagination__count p-pagination__count">Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
-            </nav>
+{#            <nav class="c-pagination p-pagination">#}
+{#                <div class="c-pagination__ctrl">#}
+{#                    <div class="c-pagination__newer">#}
+{#                        {% if paginator.previous -%}#}
+{#                        <a href="{{ paginator.previous }}">Newer</a>#}
+{#                        {%- endif %}#}
+{#                    </div>#}
+{#                    <div class="c-pagination__older">#}
+{#                        {% if paginator.next -%}#}
+{#                        <a href="{{ paginator.next }}">Older</a>#}
+{#                        {%- endif %}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <span class="c-pagination__count p-pagination__count">Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>#}
+{#            </nav>#}
 
             {%- endblock content %}
         </main>
 
+        <div class="p-copyright">
+          <p class="p-menu evenly-spaced">
+            <a href="/other/about">About</a>
+            <a href="/other/archive">Archive</a>
+          </p>
+        </div>
+
      
       <footer class="l-footer">
           {% block footer -%}
-          <p class="p-copyright">
-              {% if config.extra.copyright -%}
-              {% set content = config.extra.copyright | markdown(inline=true) %}
-              {{ post_macros::polish(content=content) }}
-              {%- endif %}
-          </p>
+            <p class="p-copyright">
+            Marcin Mazurkiewicz <br/>
+              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+              Attribution 4.0 International License</a></p>
           {%- endblock footer %}
       </footer>
 

@@ -5,10 +5,6 @@
             <time datetime="{{ page.date | date(format="%F") | safe }}">
                 {{ page.date | date(format="%F") }}
             </time>
-            {% if page.extra.author -%}
-              by {{ page.extra.author}}
-            {%- endif %}
-            {{ " - " }}({{ page.reading_time }} min read)
         </p>
     </header>
 {% endmacro title %}

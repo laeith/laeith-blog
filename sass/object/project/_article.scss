@@ -1,12 +1,12 @@
 .p-article {
   &__thumbnail {
-    margin-top: 24px;
+    margin-top: 12px;
   }
   &__body {
-    margin: 0 0 30px;
+    margin: 0 0 20px;
     word-wrap: break-word;
     @include mq-up(sm) {
-      margin: 40px 0 60px;
+      margin: 20px 0 30px;
     }
   }
 }

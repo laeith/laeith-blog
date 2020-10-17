@@ -9,20 +9,12 @@
 
 {% block content %}
 <article class="p-article">
-    <header>
         <h1>{{ page.title }}</h1>
-        <div>
             <div class="c-time">
-
                 <time datetime="{{ page.date | date(format="%F") | safe }}">
                     {{ page.date | date(format="%F") }}
                 </time>
-                {% if config.author -%}
-                  by {{ config.author }}
-                {%- endif %}
             </div>
-        </div>
-    </header>
     {% if page.toc and page.extra.toc -%}
     <div class="post-toc" id="post-toc">
         <h2 class="post-toc-title">Contents</h2>
