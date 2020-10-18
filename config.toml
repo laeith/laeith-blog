@@ -2,8 +2,8 @@
 base_url = "http://www.laeith.com"
 
 # Used in RSS by default
-title = "Laeith learning tools"
-description = "All and nothing"
+title = "Laeith's Tapestry of Life"
+description = "A blog about many things, including but not only computer science, philosophy, economics, mathematics, foundational work"
 # The default language, used in RSS
 default_language = "en"
 # Whether to generate a RSS feed automatically
@@ -52,7 +52,7 @@ languages = []
 [extra]
 # Put all your custom variables here
 author = "laeith"
-subtitle = "Where ends meet"
+subtitle = "weave until it makes sense"
 copyright = "None"
 
 katex_enable = true
