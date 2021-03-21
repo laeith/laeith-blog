@@ -8,7 +8,9 @@ Surprisingly, it turns out that it's not so easy to present ideas clearly and pr
 
 Hopefully this will help.
 
-Privately I'm a mix of a software engineer, peasant philosopher and an amateur investor. Expect the oddest from each.
+Privately I'm a mix of a technologist, peasant philosopher and an amateur investor with interest in finance. Expect the oddest from each. Recently I've been mostly busy learning and exploring various areas of computer science and software engineering, given that I expect the majority of writing to be highly technical.
+
+In the future I might 
 
 If you want to contact me feel free to do so via LinkedIn/Twitter.
 

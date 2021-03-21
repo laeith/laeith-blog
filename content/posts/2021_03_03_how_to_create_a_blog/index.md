@@ -49,19 +49,21 @@ There is definitely *some* cost that needs to be paid up-front, this is especial
 
 On top of simplicity **we get consistency**, I used to toy a little with Python-based solution "Pelican", getting it up and running tends to be an irregular experience - installing Python, getting pip, getting dependencies and finally running efforts might vary from very straightforward to a multi-hour battle (Python2 clashes with Python3, pip missing/clashes, incorrect dependencies, setting up virtual environments, trying to build old blogs that didn't have version specified...). With single-binary solution we can put it into a repository and forget about all these problems once and for all.
 
-Unfortunately the remaining part of configuration is more time-demanding, picking a starting theme, understanding template engine, doing basic modifications and making sure that everything works (images, syntax highlighting, shortcodes, archive) is a few hours effort at minimum.
+Unfortunately the remaining part of configuration is more time-demanding, picking a starting theme, understanding template engine, doing basic modifications and making sure that everything works (images, syntax highlighting, shortcodes, archive) is a few hours effort at the minimum.
 
 Surprisingly, because the end product we get is a bunch of static files It's trivial to get it up and running in public - the market is big enough to have many quick solutions ready, to name a few: Netlify, GitGub Pages, GitLab Pages... with SSGs having documentation for each major platform - e.g. [Zola for GitHub Pages](https://www.getzola.org/documentation/deployment/github-pages/)
 
-### Fully DYI approach, creating a blog from scratch
+### Fully DYI approach, creating a blog platform from scratch
 
-TODO:
+I believe that unless you're trying to create a feature rich portal with potential of having lots of custom features, at least the size of [Art of Manliness](https://www.artofmanliness.com/) you shouldn't even think about it. Even then it's probably better to start with something dirty and quick, only eventually moving to a custom solution.
+
+Something that I outright crossed as a no-go. There is no way I would be able to justify time spent on creating a blogging platform from scratch, this sounds like a great idea for a 1st year student that wants to be a front-end developer - and I'm not entirely sure about that either.
 
 ### Final words
 
 Having evaluated most choices I settled with an SSG - [Zola](https://github.com/getzola/zola), I'm not sure if it's much better than e.g. Hugo as both provide very polished basic functionality and I don't really have any use for the more advanced ones. Hugo is definitely better when it comes to the number of templates readily available, Zola is a much younger project. Ruby fans should take a closer look at [Jekyll](https://github.com/jekyll/jekyll) and Python professionals might be content with [Pelican.](https://github.com/getpelican/pelican/)
 Because all of them support Markdown it shouldn't be that hard to switch (assuming simple templates) if something goes wrong.
 
-This might not be the best choice for people that 'just want to start blogging, **right now**', for such people I'd recommend looking into hosted solutions like Medium or Blogger. Yes, they have their problems but nothing beats easy of use. People, especially programmers tend to underappreciate how much time can be saved with not perfect but good-enough solutions.
+This might not be the best choice for people that 'just want to start blogging, **right now**', for such people I'd recommend looking into hosted solutions like Medium or Blogger. Yes, they have their problems but nothing beats easy of use. People, especially programmers tend to underappreciate how much time can be saved with not perfect but perfectly good-enough solutions.
 
 On the other hand static site generators seem to be the best choice for novice, tech-savvy bloggers, especially if they don't really want to make money out of it. So far I'm quite pleased with my choice.
