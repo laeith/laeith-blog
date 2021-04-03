@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "http://www.laeith.com"
+base_url = "https://www.laeith.com"
 
 # Used in RSS by default
 title = "Laeith's Tapestry of Life"
