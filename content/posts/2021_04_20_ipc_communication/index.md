@@ -4,15 +4,6 @@ date = 2021-05-04
 draft = true
 +++
 
-TODO:
-
-Why do we even need this?
-Pickle, serializable etc.
-
-### Methodology
-
-
-
 - Ping-pong
     - Synchronously
     - Asynchronously
