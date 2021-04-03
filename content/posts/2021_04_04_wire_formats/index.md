@@ -5,7 +5,7 @@ date = 2021-04-04
 
 Every time we want to send data from one system to another over network, or a file, we have to somehow represent it in bytes, this is achieved by data encoding. It's a translation of in-memory objects to byte sequences and *vice versa*.
 
-Given that applications evolve it's reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it's vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann 'Designing Data-Intensive Applications' chapter 4.
+Given that applications evolve it's reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it's vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann 'Designing Data-Intensive Applications' chapter 4, or [his excellent post about it](https://martin.kleppmann.com/2012/12/05/schema-evolution-in-avro-protocol-buffers-thrift.html).
 
 This article will present several formats by comparing their performance and considering basic ease of use. Alongside benchmarking the goal is to find a suitable serialization method for my distributed system communication, it should be reasonably fast and must seamlessly integrate between multiple subsystems written in Java, Python and Rust.
 
