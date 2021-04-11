@@ -3,7 +3,7 @@ title = "Wire formats - comparison & benchmarking"
 date = 2021-04-04
 +++
 
-Every time we want to send data from one system to another over network, or a file, we have to somehow represent it in bytes, this is achieved by data encoding. It's a translation of in-memory objects to byte sequences and *vice versa*.
+Every time we want to send data from one system to another over network, or to a file, we have to somehow represent it in bytes, this is achieved by data encoding. It's a translation of in-memory objects to byte sequences and *vice versa*.
 
 Given that applications evolve it's reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it's vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann 'Designing Data-Intensive Applications' chapter 4, or [his excellent post about it](https://martin.kleppmann.com/2012/12/05/schema-evolution-in-avro-protocol-buffers-thrift.html).
 
@@ -11,11 +11,11 @@ This article will present several formats by comparing their performance and con
 
 ### Methodology
 
-I'm going to compare simple scenarios like serialization, deserialization and sometime special combinations using provided Java clients for each respective format.
+I'm going to compare simple scenarios like serialization, deserialization and sometimes special combinations using provided Java clients for each respective format.
 
 Micro-benchmarking is notoriously tricky to get right, and even when we get it right it's hard to draw correct conclusions. On top of that, I'm using a JVM-based language that makes it even worse. Profiling is a must, even with these simple benchmarks I had to profile the code to weed out quite a few obvious problems.
 
-It's turns out it's crucial to use data that is **as close to production data as possible**, for benchmarking I used message schema that is fairly representative for my use-case - but it can make *significant* difference.
+It's turns out it's crucial to use data that is **as close to production data as possible**, for benchmarking I used a message schema that is fairly representative for my use-case - but schema can make *significant* difference.
 Additionally, performance will vary depending not only on **how you use the client but also what client is used** (i.e. Java Avro client vs C++ Avro client etc.) 
 
 Note that the purpose of this benchmark is to *compare* serialization/deserialization speed, this means that these values probably don't represent 'optimal' speed that could be achieved - there are potential optimizations that could be applied like: avoid autoboxing, using alternative client/approach, using more judicious types (do we really need an int for a version field?) etc.
@@ -72,7 +72,7 @@ SBE requires a separate paragraph on its own. The format uses a very interesting
 
 Provided that we can make full use of that and don't do any unnecessary copying in the business logic (and apply a few more performance tricks) it's possible to achieve outstanding results, all on a single pinned thread.
 
-Unfortunately this comes at a price of usability: schema is very extensive and verbose, reading/writing requires operating on Bytes/Buffers semi-directly, and the marriage with business logic is also quite cumbersome. At least infamous XML has good tooling/IDE support out of the box. I'd say it's still a reasonable price to pay if speed is the dominant requirement and we have lots of time.
+Unfortunately this comes at a price of usability: schema is very extensive and verbose, reading/writing requires operating on Bytes/Buffers semi-directly, and the marriage with business logic is also quite cumbersome. At least infamous XML has good tooling/IDE support out of the box. I'd say it might be a reasonable price to pay if speed is the dominant requirement and we have lots of time.
 
 {{ image(src="sbe_schema.png", alt="Simple binary encoding schema") }}
 
@@ -83,7 +83,7 @@ There are other "zero-copy" formats like **Cap'n Proto** and **FlatBuffers**, ma
 
 Even a single client can be used in multiple ways, this is especially acute in case of Avro where *the naive* usage provides speeds on par with JSON, but two relatively minor changes can give us 2.5x improvement:
 
-'Typical/purity' Avro serialization usage: **1132.303 ± 27.516**
+'Typical/purity' Avro serialization usage: **1132.303 ± 27.516 ops/ms**
 
 When we take a look at CPU flame it becomes obvious what's the problem:
 
@@ -91,7 +91,7 @@ When we take a look at CPU flame it becomes obvious what's the problem:
 
 In the naive implementation we spend half the time for builders recreation on each pass. Results after introducing message builder and bytebuffer reuse:
 
-Avro serialization with optimizations: **2550.451 ± 109.546**
+Avro serialization with optimizations: **2550.451 ± 109.546 ops/ms**
 
 {{ image(src="avro_post_fix.png", alt="Avro post flamegraph") }}
 
