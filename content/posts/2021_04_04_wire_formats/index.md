@@ -5,9 +5,9 @@ date = 2021-04-04
 
 Every time we want to send data from one system to another over network, or to a file, we have to somehow represent it in bytes, this is achieved by data encoding. It's a translation of in-memory objects to byte sequences and *vice versa*.
 
-Given that applications evolve it's reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it's vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann 'Designing Data-Intensive Applications' chapter 4, or [his excellent post about it](https://martin.kleppmann.com/2012/12/05/schema-evolution-in-avro-protocol-buffers-thrift.html).
-
 This article will present several formats by comparing their performance and considering basic ease of use. Alongside benchmarking the goal is to find a suitable serialization method for my distributed system communication, it should be reasonably fast and must seamlessly integrate between multiple subsystems written in Java, Python and Rust.
+
+Given that applications evolve it's reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it's vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann 'Designing Data-Intensive Applications' chapter 4, or [his excellent post about it](https://martin.kleppmann.com/2012/12/05/schema-evolution-in-avro-protocol-buffers-thrift.html).
 
 ### Methodology
 
@@ -104,6 +104,17 @@ That's one of the reasons benchmarking on your own is important, even if someone
 
 Assuming we get reasonably reliable results it's still not so easy to apply it in real world. Let's say that we use the abovementioned benchmarks to guide our choices, let's say that for our requirements Protobuf is too slow. In practice, it turns out that most or all of our data is represented by doubles, if we do the benchmark we get:
 
+```protobuf
+message DoublesMsg {
+  double double1 = 1;           // 1.1234567899
+  double double2 = 2;           // 2.1234567899
+  double double3 = 3;           // 3.1234567899
+  double double4 = 4;           // 4.1234567899
+  double double5 = 5;           // 5.1234567899
+  repeated double doubles = 6;  // [1.132314, 2.111111, 3.314155, 4.1231488, 5.12395832]
+}
+```
+
 {{ image(src="table_doubles.png", alt="Doubles benchmark") }}
 
 Explanation for enormous speed up for Protobuf, and lack of any change for JSON is probably obvious for an attentive engineer. Logic behind this is left as an exercise for the reader.
@@ -116,9 +127,6 @@ Hint, benchmarks with comparable string-only data size when serialized to JSON:
 ### Micro-benchmarking, is it worth it?
 
 All problems with doing such micro-benchmarks make me wonder how much value they provide. I guess they are a good hint at what can potentially perform well, nonetheless I believe that doing a production-like end-to-end performance testing is necessary anyway - it's far too easy to make a small mistake in business logic that completely trumps any gains from faster serialization framework.
-
-
-### Closing words
 
 Benchmarking, especially **comparison when we aren't experts in a given technology, is hard**: usually it's advised to write two versions alongside and check differences, but even in only slightly more complex scenarios **writing two *same* versions might be a non-obvious task**.
 
