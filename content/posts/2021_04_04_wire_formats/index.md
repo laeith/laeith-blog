@@ -83,7 +83,7 @@ There are other "zero-copy" formats like **Cap'n Proto** and **FlatBuffers**, ma
 
 Even a single client can be used in multiple ways, this is especially acute in case of Avro where *the naive* usage provides speeds on par with JSON, but two relatively minor changes can give us 2.5x improvement:
 
-'Typical/purity' Avro serialization usage: **1132.303 ± 27.516 ops/ms**
+'Typical/purity' Avro serialization usage: **1132 ± 27 ops/ms**
 
 When we take a look at CPU flame it becomes obvious what's the problem:
 
@@ -91,7 +91,7 @@ When we take a look at CPU flame it becomes obvious what's the problem:
 
 In the naive implementation we spend half the time for builders recreation on each pass. Results after introducing message builder and bytebuffer reuse:
 
-Avro serialization with optimizations: **2550.451 ± 109.546 ops/ms**
+Avro serialization with optimizations: **2550 ± 109 ops/ms**
 
 {{ image(src="avro_post_fix.png", alt="Avro post flamegraph") }}
 
