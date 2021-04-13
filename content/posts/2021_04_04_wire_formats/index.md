@@ -41,7 +41,7 @@ Other formats have equivalent/similar schemas, for details see code.
 
 ### Benchmarks
 
-Let's cut to the chase, on my desktop (Ryzen 3900x): throughput - **more is better**:
+Let's cut to the chase, on my desktop (Ryzen 3900x): throughput - **more is better**, ± stands for confidence interval (at 99.9%):
 
 {{ image(src="main_chart.png", alt="Main chart") }}
 

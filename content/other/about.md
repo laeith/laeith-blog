@@ -8,7 +8,7 @@ Surprisingly, it turns out that it's not so easy to present ideas clearly and pr
 
 Hopefully this will help.
 
-Privately I'm a mix of a technologist, novice philosopher and an amateur investor with interest in finance. Expect the oddest from each. Recently I've been mostly busy learning and exploring various areas of computer science and software engineering, given that I expect the majority of writing to be highly technical in the near future.
+Privately I'm a mix of a technologist, novice philosopher and an amateur investor with an interest in finance. Expect the oddest from each. Recently I've been mostly busy learning and exploring various areas of computer science and software engineering, given that I expect the majority of writing to be of technical nature in the near future.
 
 In the future I might tackle more general themes, or even attempt bigger scale ventures.
 
