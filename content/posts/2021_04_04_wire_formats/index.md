@@ -85,7 +85,7 @@ Even a single client can be used in multiple ways, this is especially acute in c
 
 'Typical/purity' Avro serialization usage: **1132 ± 27 ops/ms**
 
-When we take a look at CPU flame it becomes obvious what's the problem:
+When we take a look at CPU flame graph it becomes obvious what's the problem:
 
 {{ image(src="avro_pre_builder_reuse.png", alt="Avro pre flamegraph") }}
 
