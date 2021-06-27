@@ -5,7 +5,7 @@ date = 2021-06-17
 
 Testing is at the core of all complex software systems that exhibit any sense of quality - and works well for developers sanity. It's the main tool that helps us **convince ourselves that what we created will probably work correctly before actually running it in production.**
 
-There are tons and tons of books and information out there about software testing, this falls into a slightly more specific niche that is back-end services testing, potentially in a distributed environment. It's unlikely to be of much use for GUIs, desktop software, safety critical systems, developer tools nor convoluted monoliths.
+There are tons and tons of books and information out there about software testing, this falls into a slightly more specific niche that is back-end services testing, potentially in a distributed environment. It's unlikely to be of much use for GUIs, desktop software, safety critical systems, developer tools nor very large monoliths (browsers, operating systems). This can also be highly product and domain-specific.
 
 This is also not going to be about the old-fashioned way of testing - manual testing, separate automated QA via selenium etc. This is about **developers owning their work and striving for quality.** Though on the other spectrum - this is going to be mostly about pre-production verification and its impact on future changes. This is also not going to touch continuous integration, continuous deployments, prod-pars, observability, different types of deployments and many other quality assurance techniques, although these are a vital part of a well-oiled system too.
 
@@ -130,6 +130,8 @@ Not to mention all the problems that we get from such environments, especially w
 
 If a system is so big that it can't really fit into a single machine, we can write E2E tests in a slightly more sophisticated way. It's rare that any given functionality or flow requires the whole system to be up and running, instead we can declare which services are required for a test and run only those.
 Obviously there is a theoretical limit, technically a system might be too big to fit into a single machine for testing purposes, that limit is quite far and only getting pushed further every single year.
+
+For very, very large systems it might not be feasible to write a lot of system-wide functional tests, in such cases we'll most likely end up with most tests scope limited to a few/single service and only a handful of system-wide end to end tests (potentially executed on an external system, daily) - if we really deem them necessary.
 
 If your company has enough resources (and is willing) to provide each developer with his own production-like environment on demand, then good for you.
 
