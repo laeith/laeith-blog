@@ -102,11 +102,11 @@ At this point it's getting costly, but to alleviate such problems we can model o
 
 With the rise of containerization, and Docker in particular, it's slowly getting easier to test locally with real components instead of their mocks/doubles, this can be facilitated e.g. by [Testcontainers](https://github.com/testcontainers/testcontainers-java). Testcontainers integrate JUnit based tests with Docker containers running required infrastructure - this looks promising but unfortunately is not feasible for quick testing during development. The startup time is too slow to restart the state before each test and this is a problem that I don't think can be solved anytime soon. Alternatively we could run a single instance of each component and force developers to 'clean' the state after each test on their own - personally I haven't seen much success with this approach (yet).
 
-**The rule of a thumb is don't use mocks unless there is no other sensible way**. Use embedded versions, test doubles, custom implementations but consider mocks the last resort. Nonetheless, there are very legitimate situations where mocks are needed/useful, a few examples:
+**The rule of a thumb is don't use mocks (too much) unless there is no other sensible way**. Use embedded versions, test doubles, sometimes custom implementations. Nonetheless, there are very legitimate situations where mocks are needed/useful, a few examples:
 - Simulating failures
 - Caching: we need to verify that the cache was actually hit to retrieve data.
 - Sending emails: technically we could set up a real email server and check it there, but it seems a little too excessive in my opinion.
-- 3rd party services that are hard to emulate in a way that provides value
+- 3rd party services that are hard to emulate in a way that provides value (especially true in DevOps/Cloud environments)
 - testing on real infrastructure, or writing good test doubles is not worth the effort
 
 It's not enough to _verify_ that a method on a mocked service was called, what we really want to know is if it worked - and in order to make sure that it worked we also must be sure that the expected contract with that service is fulfilled by both sides. Test environment should be a best effort simulation of production environment, the more we mock the more we lack in verisimilitude and loose confidence.
