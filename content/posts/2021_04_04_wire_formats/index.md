@@ -83,7 +83,7 @@ There are other "zero-copy" formats like **Cap'n Proto** and **FlatBuffers**, ma
 
 Even a single client can be used in multiple ways, this is especially acute in case of Avro where *the naive* usage provides speeds on par with JSON, but two relatively minor changes can give us 2.5x improvement:
 
-'Typical/purity' Avro serialization usage: **1132 ± 27 ops/ms**
+'Typical/pure' Avro serialization usage: **1132 ± 27 ops/ms**
 
 When we take a look at CPU flame graph it becomes obvious what's the problem:
 
@@ -132,10 +132,10 @@ Benchmarking, especially **comparison when we aren't experts in a given technolo
 
 In the end, does it really make any difference?
 Well, for high frequency trading it can be of paramount importance when end-to-end processing time is typically measured in microseconds (even 10s of microseconds - without using FPGAs/ASICs).
-On the other hand, if business logic takes milliseconds, or it does disk I/O, or it makes external calls, then serialization time might be on par with measurement error.
+On the other hand, if business logic takes milliseconds, or it does disk I/O, or it makes external calls, then serialization time **might be on par with measurement error.**
 
-Having spent a few days toying with different formats and clients I settled with Protobuf. I was tempted to give SBE a try hoping that I could come up with a seamless abstraction over the client - but it doesn't seem to have good clients anywhere but in Java and C++.
-Protobuf definitely isn't the fastest but it seems to provide a good balance between performance and usability/time-to-market. On top of that, because of its ubiquity it's almost as easy to find performant clients in any language as it is for JSON.
+Having spent a few days toying with different formats and clients I settled with Protobuf. I was tempted to give SBE a try hoping that I could come up with a seamless abstraction over the client - but it doesn't seem to have good clients outside of Java and C++.
+Protobuf definitely isn't the fastest, but it seems to provide a good balance between performance and usability/time-to-market. On top of that, due to its ubiquity it's almost as easy to find performant clients in any language as it is for JSON.
 
 In the future it might be useful to extend my benchmarks to measure performance per payload size, after all serialization/deserialization might not scale linearly i.e. due to implementation details.
 
