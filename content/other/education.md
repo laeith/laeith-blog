@@ -51,7 +51,6 @@ I tend to do a course or two yearly, because these are usually quite time-demand
 #### **Nand2Tetris aka Build a Modern Computer from First Principles, Part 1 by Shimon Schocken and Noam Nisan (Hebrew University of Jerusalem) @ Coursera**
 From the beginning of my programming journey I always had that nudging question, lurking somewhere deep in the back of my mind: **How the does it really work?** I've started with Python, it's a high level language that is superb for being productive while at the same time not being that great with actual computer science, and because of that I never had a chance to toy with a very low level infrastructure.  
 
-// TODO: Restate
 Course ratings speak for themselves - it has an average of 4.9 out of 5 based on 450(!) reviews on Coursera. You can watch a short talk about this course by [Shimon Schocken himself on Ted.com](https://www.ted.com/talks/shimon_schocken_the_self_organizing_computer_course).
 
 I always had a vague idea how it might work and why some things are the way they are, but I really lacked hands-on experience with first principles. This course is a real eye-opener when it comes to comprehending how computers work (in a simplistic, comprehensible way). During the course we get a unique opportunity to build a computer for the ground up, in this case it means from defining logic gates in 'almostHDL' up to creating a working assembly-like language and using various input/output simulations. All of it works inside a hardware simulator written in Java, which is provided out of the box.  

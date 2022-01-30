@@ -4,6 +4,7 @@ logs
 
 # Ignore build files
 public
+drafts
 
 .idea
 *.iml
