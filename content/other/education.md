@@ -80,5 +80,5 @@ The only thing I wasn't impressed with was pace and difficulty level. Anyway, It
 * Operating systems and systems programming - CS 162 (UC Berkeley) by John Kubiatowicz
 * Python for researchers by HarvardX (Jukka-Pekka "JP" Onnela) @ edx.org
 * Web development by Steve Huffman @ Udacity
-* Many others...
+* Other...
 

@@ -139,7 +139,7 @@ If your company has enough resources (and is willing) to provide each developer 
 
 Every single regression should be covered by a test, a test written before doing any fixes. Actually, regressions are the perfect place where TDD actually yields reasonable benefits. 
 
-**Other than that and *maybe* maintenance type development TDD sounds like a huge pile of inefficiency**, especially for newly written parts that aren't heavily coupled with existing codebase. Maybe I'm just a poor developer but in my case implementing new software is a continuous process interleaved with designing and coding. I start with rough drafts and ideas but by the end these tend to differ a lot from final implementation, usually even APIs evolve significantly in the process.
+**Other than that and *maybe* maintenance type development TDD sounds like a huge pile of inefficiency**, especially for newly written parts that aren't heavily coupled with existing codebase. Maybe I'm just not that great developer but implementing new software seems to be a continuous process interleaved with designing and coding. I start with rough drafts and ideas but by the end these tend to differ a lot from final implementation, even APIs evolve significantly in the process.
 
 ### Caveats / Closing words
 
@@ -148,7 +148,7 @@ This is already too long, yet I feel like we only scratched the surface. My orig
 Lastly, you can't catch all bugs, quality assurance is getting unreasonably expensive very quickly for general purpose software. Sometimes it's just better to fail fast, eat the cost and move on.
 
 
-#### Literature:
+#### Links:
 - [Postmortem lessons by Dan Luu](https://danluu.com/postmortem-lessons/)
 - [Testing v. informal reasoning by Dan Luu](https://danluu.com/tests-v-reason/)
 - [Testing microservices the sane way by Copy Construct](https://copyconstruct.medium.com/testing-microservices-the-sane-way-9bb31d158c16)
