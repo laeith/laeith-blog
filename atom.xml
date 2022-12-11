@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Tapestry</title>
+	<subtitle>A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work</subtitle>
+	<link href="https://www.laeith.com/atom.xml" rel="self" type="application/atom+xml"/>
+	<link href="https://www.laeith.com"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-05-13T00:00:00+00:00</updated>
+	<id>https://www.laeith.com/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Codingame - Spring Challenge</title>
+		<published>2022-05-13T00:00:00+00:00</published>
+		<updated>2022-05-13T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/"/>
+		<link rel="alternate" href="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/" type="text/html"/>
+		<id>https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/</id>
+		<content type="html">&lt;p&gt;Last week &lt;a href=&quot;https:&#x2F;&#x2F;www.codingame.com&#x2F;home&quot;&gt;CodinGame.com&lt;&#x2F;a&gt; hosted a Spring Challenge, it&#x27;s a 10-day bot programming
+competition that I gave a try and wanted to share my thoughts.&lt;&#x2F;p&gt;
+&lt;p&gt;The contest is held yearly and this time about ~8000 people participated with at least a single submission. The idea revolves
+around creating an AI for a game - in this particular case the goal is trivial: protect your base and outlive your
+opponent.
+Players start at opposite corner of the map and control a team of 3 heroes while monsters randomly spawn at the edges
+and regularly attack bases, if a monster reaches one&#x27;s base it deals damage. Heroes can kill monsters, gain &#x27;mana&#x27; for
+each damage dealt and can cast a few spells.&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2022-04-22-codingame-springchallenge&#x2F;play-opt.gif&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2022-04-22-codingame-springchallenge&#x2F;play-opt.gif&quot; alt=&quot;Spring Challenge 2022 Playing&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;I always wanted to do something similar locally, i.e. code a simple game and create an AI for that, ideally
+leveraging massive number of simulations. Except for controlling the environment itself, CodinGame checks pretty much all required
+boxes, and it works in a multiplayer mode! I intended to spend only a few hours to find out how polished the
+platform is - &lt;strong&gt;to my surprise when 3 days later I clocked in ~10h+.&lt;&#x2F;strong&gt; Delight at its finest.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;This was my first try at such type of contests so whatever you read here should be taken a with a grain of salt.&lt;&#x2F;strong&gt;
+Having said that, let me describe the road I took to get to Gold league - it should be quite representative of what
+one can expect from such events.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wood-leagues&quot;&gt;Wood leagues&lt;a class=&quot;zola-anchor&quot; href=&quot;#wood-leagues&quot; aria-label=&quot;Anchor link for: wood-leagues&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;I started with the simplest tactic one can imagine: find the closest monster to my base and attack it with all we got.
+Hard to get simpler... yet it turned out to be an effective approach. My take on that is that everyone
+already moved to more efficient approaches but haven&#x27;t managed to fully implement them yet.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s improve it and assign a single hero to a single monster. I also noticed a pretty severe bug in my trivial implementation -
+turns out that when sides are changed (roughly half matches) own hero identifiers change i.e. 0-2 on Blue side and 3-5
+on Red side. &lt;em&gt;Yes, it meant that I was loosing half games instantly [cough, cough].&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;This got me into Bronze, ~TOP 2500&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bronze-leagues&quot;&gt;Bronze leagues&lt;a class=&quot;zola-anchor&quot; href=&quot;#bronze-leagues&quot; aria-label=&quot;Anchor link for: bronze-leagues&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;New league, new toys. They gave us a few spells and introduced a fog of war. Because both bases were always out of fog
+of war and my brave heroes were always going for the closed &#x27;visible&#x27; monster... they tended to run mindlessly into
+enemy base if all monsters on my side were killed. Additionally, enemies started using spells and more sophisticated
+tactics e.g. 2 defenders and 1 attacker. The first shift of meta.&lt;&#x2F;p&gt;
+&lt;p&gt;Another set of naive improvements - let&#x27;s ignore enemies further than X distance from my base.&lt;&#x2F;p&gt;
+&lt;p&gt;This improved my score only slightly, I jumped about 200 positions and noticed that some games end with timeout where
+player with higher &#x27;wild mana&#x27; wins (wild mana - mana gathered outside own base), given that my folk usually stay within
+base it&#x27;s hard to win anything that ended due to round limit.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Bronze, TOP ~2300&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Coded basic 2-defender-1-attacker tactic, Also started using &#x27;Control&#x27; spell on all monsters within range that are not
+heading towards enemy base and have more than 14 health points (Control spell forces a unit to move towards a given
+direction). Ignore fog of war for now.&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2022-04-22-codingame-springchallenge&#x2F;full_game.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2022-04-22-codingame-springchallenge&#x2F;full_game.png&quot; alt=&quot;Spring Challenge 2022 Playing&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;&lt;em&gt;Submitted a new version, got to Bronze ~1500 and went to sleep. Got promoted to Silver overnight.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;silver-leagues-and-the-road-to-gold&quot;&gt;Silver leagues and the road to Gold&lt;a class=&quot;zola-anchor&quot; href=&quot;#silver-leagues-and-the-road-to-gold&quot; aria-label=&quot;Anchor link for: silver-leagues-and-the-road-to-gold&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;About 2000 players were moved to Silver with me, not bad. My solution was very hacky at this point, and opponents were
+getting fancier with their solutions all the time. After fixing a few more issues with defenders (e.g. they tended to
+stick a little too close to the middle, wasting too much time on random monsters spawning next to my base). This didn&#x27;t
+do much for my overall score, top ~1300.&lt;&#x2F;p&gt;
+&lt;p&gt;I decided that it&#x27;s time for a big bang rewrite as the approach is not too flexible. After another hour I was in
+slightly better shape with fewer magic ifs, functions and random numbers. Got back to working
+on strategy and tactics again, this time I wanted to invest more upfront before submitting my version for evaluation.&lt;&#x2F;p&gt;
+&lt;p&gt;Major changes:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Introduced &#x27;stances&#x27;, so that I could dynamically change behaviour e.g. DEFENDER, MIDDLE ROAM, ATTACKER, DIVE etc.&lt;&#x2F;li&gt;
+&lt;li&gt;My &#x27;Attacker&#x27; started farming in the middle and only around 80th turn moved into an offensive position.&lt;&#x2F;li&gt;
+&lt;li&gt;Attacker learned new tricks:
+&lt;ul&gt;
+&lt;li&gt;e.g. Wind + Shield spell combo&lt;&#x2F;li&gt;
+&lt;li&gt;Shield monsters aggressively if they are healthy and close to enemy base (so that enemies can&#x27;t Wind them anymore)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Defender improvements:
+&lt;ul&gt;
+&lt;li&gt;use Wind a lot more, prioritize it over everything else if monster is not shielded&lt;&#x2F;li&gt;
+&lt;li&gt;use Control very aggressively, turned out that if I&#x27;m Controlling my side of map well enough then opponents can&#x27;t
+utilize their offensive positions&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This got me into top 70 (TOP 7 in Poland) and Gold league was opened on the following day!
+Seemed very promising given that I still could think of plenty improvements on both def and off sides (better combos,
+better farming, less reliant on magic numbers, better timing for offense, take enemy position into account when
+defending, number of enemies, simulations, local-system parameter evaluation etc.), plus my implementation was... less
+than ideal.&lt;&#x2F;p&gt;
+&lt;p&gt;Then I had to take a break for a few days. In fact that was my final submission.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Day 3&#x2F;4: Top 70&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Over time my AI started loosing its appeal, people caught up and even surpassed my score. Eventually, I ended the
+competition in top 800 a week later without any additional submissions.&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2022-04-22-codingame-springchallenge&#x2F;chrome_lGriSiCTFb.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2022-04-22-codingame-springchallenge&#x2F;chrome_lGriSiCTFb.png&quot; alt=&quot;Spring Challenge 2022 Playing 2&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;post-mortem&quot;&gt;Post-mortem&lt;a class=&quot;zola-anchor&quot; href=&quot;#post-mortem&quot; aria-label=&quot;Anchor link for: post-mortem&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;This was a very interesting venture into the classic engineering loop:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;observe -&amp;gt; think&#x2F;measure -&amp;gt; improve -&amp;gt; observe&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Enjoyment was absurdly high. Albeit, I felt a little disappointed when my AI got demoted into TOP 800 (out
+of ~8k participants) during my absence - I was hoping for a better final placement despite my inactivity!
+Anyway, probably still a reasonable placement for a first timer.&lt;&#x2F;p&gt;
+&lt;p&gt;It scratched my competitive side a lot. Next time I need to set up a better schedule so that I have enough time to at 
+least give it a full try.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;A few final thoughts about the game itself:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Importance of time, especially during the finish, meta changes and converges only at the end and the best
+implementation wins, almost all people from Top 20 ended up using the same tactic.&lt;&#x2F;li&gt;
+&lt;li&gt;The &#x27;problem&#x27; that current meta impacts our evaluation hugely, i.e. an approach that does well right now vs currently
+dominant tactics will do bad job 3 days later when people switch.
+&lt;ul&gt;
+&lt;li&gt;So maybe it&#x27;s not worth investing into specific tactics initially and only fine-tune it during later stages?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Talking about meta and strategy, this went unexpectedly complex very quickly:
+&lt;ul&gt;
+&lt;li&gt;Attacking is easier than defending, it&#x27;s also easier to execute properly and yields better results quickly&lt;&#x2F;li&gt;
+&lt;li&gt;Have a funky tactic and win 70%+ games because you abuse some mechanic or try to create a more general approach
+that, if executed well, technically, could beat everyone?
+&lt;ul&gt;
+&lt;li&gt;What about CG matchmaking system? Which approach is more valued there? Win 70% vs general population vs win
+80% against top players but only 60% vs general population?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;But that well-executed general approach would be complex - do I have enough time to do it? Is it possible during a
+10-day contest at all?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Education</title>
+		<published>2021-10-01T00:00:00+00:00</published>
+		<updated>2021-10-01T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/other/education/"/>
+		<link rel="alternate" href="https://www.laeith.com/other/education/" type="text/html"/>
+		<id>https://www.laeith.com/other/education/</id>
+		<content type="html">&lt;p&gt;I don&#x27;t really believe in &#x27;Top ten books that every software engineer&#x2F;person absolutely must read&#x27; - nonetheless in the past I did follow a few recommendations&#x2F;suggestions from far more experienced people, and retrospectively it was a huge time-saver.&lt;&#x2F;p&gt;
+&lt;p&gt;Another thing that I don&#x27;t agree with is that to be a good software engineer one needs to thoroughly understand every abstraction one uses. That&#x27;s bollocks! One could easily spend half of his adult life e.g. studying CPU architectures - and it still might not be enough, especially when taking into account that it&#x27;s a moving target. Modern computer science is simply too complex for any human, and that&#x27;s completely fine, we need to adapt and learn to live with that. Having said that, there is definitely a set of fundamental building blocks that  and concepts that can be used to derive complex systems from.&lt;&#x2F;p&gt;
+&lt;p&gt;This contains only positions that I currently view as a significant contribution to my repertoire. It &lt;em&gt;should not be&lt;&#x2F;em&gt; treated as a guide how to become a software engineer.
+I tried my best to avoid very specialized, in-depth works as such are of marginal use for general population and domain experts would already know them. &lt;&#x2F;p&gt;
+&lt;p&gt;Consider this page &#x27;work in progress&#x27;, once I get &lt;em&gt;more time&lt;&#x2F;em&gt; I&#x27;ll try to provide the reasoning for each choice. I know it&#x27;s a little bare bones but hopefully will be useful either way.&lt;&#x2F;p&gt;
+&lt;p&gt;Another caveat - there are entire topics missing here, programming languages, hardware books, compilers, security, computer graphics etc. the reason is that I either have very limited expertise there or I&#x27;m simply not interested in a topic at all.&lt;&#x2F;p&gt;
+&lt;p&gt;In no particular order:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Operating systems:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;pages.cs.wisc.edu&#x2F;%7Eremzi&#x2F;OSTEP&#x2F;&quot;&gt;Operating Systems: Three Easy Pieces by Remzi H. Arpaci-Dusseau and Andrea C. Arpaci-Dusseau&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.bottomupcs.com&#x2F;&quot;&gt;Computer Science from the Bottom Up by Ian Wenand&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Networking:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;book.systemsapproach.org&#x2F;index.html&quot;&gt;Computer Networks: A Systems Approach by Larry Peterson and Bruce Davie&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;beej.us&#x2F;guide&#x2F;bgnet&#x2F;html&#x2F;&quot;&gt;Beej&#x27;s Guide to Network Programming by Brian Hall&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Algorithms &#x2F; Data Structures &#x2F; Mathematics&lt;&#x2F;strong&gt; &lt;&#x2F;p&gt;
+&lt;p&gt;I have love&#x2F;hate relationship with algorithmic books, one day, hopefully, I&#x27;ll be able to recommend something reasonable.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Other:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;sre.google&#x2F;sre-book&#x2F;table-of-contents&#x2F;&quot;&gt;Google&#x27;s Site Reliability Engineering book&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Designing Data-Intensive Application by Martin Kleppmann&lt;&#x2F;li&gt;
+&lt;li&gt;Zrozumiec Programowanie by Coldwind Gynvael (Polish honorary mention)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Java:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Effective Java by Joshua Bloch&lt;&#x2F;li&gt;
+&lt;li&gt;Java Concurrency in Practice by Brian Goetz&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I don&#x27;t think it&#x27;s a good idea to recommend language specific books, in the end it&#x27;s just a tool - and once we are aware of the above, and have tried a few of them, it&#x27;s &lt;em&gt;relatively&lt;&#x2F;em&gt; easy to jump into a new one and be somewhat productive. Having said that, if someone works mostly in Java it might be worth the time to go through these. Especially Java Concurrency in Practice is a good complementary material to Java Memory Model. While the book is quite old it&#x27;s still worth its weight, especially with modern computer architectures and distributed environments.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;publications&quot;&gt;Publications&lt;&#x2F;h3&gt;
+&lt;p&gt;In construction, one day.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;open-education&quot;&gt;&lt;strong&gt;Open education&lt;&#x2F;strong&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;I tend to do a course or two yearly, because these are usually quite time-demanding I like to write a short review afterwards, it helps to solidify knowledge and might be useful as a review.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;nand2tetris-aka-build-a-modern-computer-from-first-principles-part-1-by-shimon-schocken-and-noam-nisan-hebrew-university-of-jerusalem-coursera&quot;&gt;&lt;strong&gt;Nand2Tetris aka Build a Modern Computer from First Principles, Part 1 by Shimon Schocken and Noam Nisan (Hebrew University of Jerusalem) @ Coursera&lt;&#x2F;strong&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;From the beginning of my programming journey I always had that nudging question, lurking somewhere deep in the back of my mind: &lt;strong&gt;How the does it really work?&lt;&#x2F;strong&gt; I&#x27;ve started with Python, it&#x27;s a high level language that is superb for being productive while at the same time not being that great with actual computer science, and because of that I never had a chance to toy with a very low level infrastructure.&lt;&#x2F;p&gt;
+&lt;p&gt;Course ratings speak for themselves - it has an average of 4.9 out of 5 based on 450(!) reviews on Coursera. You can watch a short talk about this course by &lt;a href=&quot;https:&#x2F;&#x2F;www.ted.com&#x2F;talks&#x2F;shimon_schocken_the_self_organizing_computer_course&quot;&gt;Shimon Schocken himself on Ted.com&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I always had a vague idea how it might work and why some things are the way they are, but I really lacked hands-on experience with first principles. This course is a real eye-opener when it comes to comprehending how computers work (in a simplistic, comprehensible way). During the course we get a unique opportunity to build a computer for the ground up, in this case it means from defining logic gates in &#x27;almostHDL&#x27; up to creating a working assembly-like language and using various input&#x2F;output simulations. All of it works inside a hardware simulator written in Java, which is provided out of the box.&lt;&#x2F;p&gt;
+&lt;p&gt;Obviously modern CPUs are much, much more complicated but the core idea of a computer can be grasped during the course. Admittedly, it has fully satisfied my curiosity, it struck the perfect balance between details and &#x27;the grand idea&#x27;.&lt;br &#x2F;&gt;
+The 2nd part is supposedly much more focused on programming (some compilers writing etc.) and for the time being I left it for later.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;algorithms-part-1-2-by-robert-sedgewick-and-kevin-wayne-princeton-coursera&quot;&gt;&lt;strong&gt;Algorithms, Part 1&#x2F;2 by Robert Sedgewick and Kevin Wayne (Princeton) @ Coursera&lt;&#x2F;strong&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Quite demanding and time-consuming, especially when done early in ones algorithmic journey.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;introduction-to-computer-science-by-harvardx-edx-org&quot;&gt;&lt;strong&gt;Introduction to Computer Science by HarvardX @ edx.org&lt;&#x2F;strong&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;As name suggests, this is an introductory course aka CS50x. This is basically a recording of live lectures held at Harvard by David Malan. It&#x27;s a very broad course that tackles many, many CS topics, though quite shallowly (I guess that&#x27;s what one should expect from intro lectures). The quality is superb.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s just that it looks like I took it too late, most concepts were already known to me, so it was kinda a revision... That I didn&#x27;t really need at that time. Somewhere in the middle I had an opportunity to work on a nice side project which I eagerly took and never came back to finish it. But like I said, it&#x27;s a nice introductory to CS (computer science, not really programming).&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;advanced-data-structures-in-java-data-structures-measuring-and-optimizing-performance-by-uc-san-diego-coursera&quot;&gt;&lt;strong&gt;Advanced Data Structures in Java &amp;amp; Data structures: Measuring and Optimizing Performance by UC San Diego @ Coursera&lt;&#x2F;strong&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;These two courses are probably the best way to start one&#x27;s journey with algorithms that I know about, I remember the tasks being quite fun and engaging - the main idea is to implement a few shortest path algorithms (final ones being A* and Dijkstra&#x27;s) in different scenarios, one of them was to actually create algorithms that work on real data. They provide a GUI (written in Java) and you continually update it with new functionality each week. You can extract map data of virtually any city using the GUI and if you implement algorithms you can visually see your work - and this seems to be exceptionally rewarding for newbies.&lt;&#x2F;p&gt;
+&lt;p&gt;Those are fairly short courses that I would recommend to people with very limited CS knowledge and skills. It also requires some basic Java, but knowing fundamentals should suffice.&lt;&#x2F;p&gt;
+&lt;p&gt;The only thing I wasn&#x27;t impressed with was pace and difficulty level. Anyway, It was worth the time at the time.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;and-others-that-i-did-too-many-years-ago-and-hardly-remember-details&quot;&gt;&lt;strong&gt;And others, that I did too many years ago and hardly remember details:&lt;&#x2F;strong&gt;&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Learn to program: The Fundamentals by University of Toronto @ Coursera.org&lt;&#x2F;li&gt;
+&lt;li&gt;Hardware &#x2F; Software interface by University of Washington @ Coursera&lt;&#x2F;li&gt;
+&lt;li&gt;Operating systems and systems programming - CS 162 (UC Berkeley) by John Kubiatowicz&lt;&#x2F;li&gt;
+&lt;li&gt;Python for researchers by HarvardX (Jukka-Pekka &amp;quot;JP&amp;quot; Onnela) @ edx.org&lt;&#x2F;li&gt;
+&lt;li&gt;Web development by Steve Huffman @ Udacity&lt;&#x2F;li&gt;
+&lt;li&gt;Other...&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Service based systems - writing tests to ensure quality and avoid staleness</title>
+		<published>2021-06-17T00:00:00+00:00</published>
+		<updated>2021-06-17T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/posts/2021-06-17-software-testing/"/>
+		<link rel="alternate" href="https://www.laeith.com/posts/2021-06-17-software-testing/" type="text/html"/>
+		<id>https://www.laeith.com/posts/2021-06-17-software-testing/</id>
+		<content type="html">&lt;p&gt;Testing is at the core of all complex software systems that exhibit any sense of quality - and works well for developers sanity. It&#x27;s the main tool that helps us &lt;strong&gt;convince ourselves that what we created will probably work correctly before actually running it in production.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;There are tons and tons of books and information out there about software testing, this falls into a slightly more specific niche that is back-end services testing, potentially in a distributed environment. It&#x27;s unlikely to be of much use for GUIs, desktop software, safety critical systems, developer tools nor very large monoliths (browsers, operating systems). This can also be highly product and domain-specific.&lt;&#x2F;p&gt;
+&lt;p&gt;This is also not going to be about the old-fashioned way of testing - manual testing, separate automated QA via selenium etc. This is about &lt;strong&gt;developers owning their work and striving for quality.&lt;&#x2F;strong&gt; Though on the other spectrum - this is going to be mostly about pre-production verification and its impact on future changes. This is also not going to touch continuous integration, continuous deployments, prod-pars, observability, different types of deployments and many other quality assurance techniques, although these are a vital part of a well-oiled system too.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;preface&quot;&gt;Preface&lt;a class=&quot;zola-anchor&quot; href=&quot;#preface&quot; aria-label=&quot;Anchor link for: preface&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;There is no silver bullet, no single proven solution emerged so far, additionally available tools and techniques used in creating good tests is a continuously expanding domain (albeit rather slowly). A few years ago we didn&#x27;t have docker, we didn&#x27;t have testcontainers, there were no good embedded solutions. We had far weaker developer machines, fewer resources at our disposal and many approaches were too time-consuming to be viable (and they are still quite a challenge for big systems).&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Treat this more like a guide than a set of concrete rules&lt;&#x2F;strong&gt;, your system might be different in ways that make it hard or even impossible to test efficiently in this manner.
+Ensuring high quality of software is a constant battle between available resources, execution time and complexity. While execution time and complexity are relatively within our reach having limited budget and time might be a showstopper. We might not be able to create multiple prod-like environments simply due to sheer costs associated with it, especially when we rely on multiple cloud services - queues, databases, warehouses, storages, 3rd party services, mainframes or even custom hardware. &lt;strong&gt;We might have to accept some trade-offs despite our best efforts.&lt;&#x2F;strong&gt;
+What&#x27;s more, these costs usually don&#x27;t grow linearly, getting basic testing in place is relatively cheap and gets us very far but getting a few prod-par environments and vast end-to-end tests can easily multiply our costs.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Tests are &#x27;a best effort&#x27; verification of the system&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;This is shown from an engineering perspective, unlike in mathematics, it&#x27;s about handling the trade-offs and balancing risks - given requirements we are attempting to &lt;em&gt;reasonably&lt;&#x2F;em&gt; get there, not necessarily always proving it.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;terminology&quot;&gt;Terminology&lt;a class=&quot;zola-anchor&quot; href=&quot;#terminology&quot; aria-label=&quot;Anchor link for: terminology&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;I don&#x27;t think the typical test divide is of much use, everyone has their own understanding of what a &#x27;unit&#x27; or &#x27;integration&#x27; should mean - and it probably varies from context to context too.
+What I could endorse is dividing tests into two categories, mostly for convenience:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Functional tests&lt;&#x2F;strong&gt; check for functional correctness and usually answer very specific, domain oriented questions like: &lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Will this request create a new user? &lt;&#x2F;li&gt;
+&lt;li&gt;Will this payment be registered and funds transferred? Will it also notify a 3rd party service?&lt;&#x2F;li&gt;
+&lt;li&gt;Will this request create a new virtual machine?&lt;&#x2F;li&gt;
+&lt;li&gt;Will this request find all user files?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Such tests are commonly known as end to end &#x2F; integration tests. &lt;&#x2F;p&gt;
+&lt;p&gt;This kind of testing makes it harder to instantly know WHY something doesn&#x27;t work, that&#x27;s fine, what is crucial is to know that something is broken and we don&#x27;t get false positives, even if finding the root cause takes a few moments it&#x27;s fine.&lt;&#x2F;p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Technical tests&lt;&#x2F;strong&gt; - sometimes it&#x27;s useful to make sure that technical constraints are also met:&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Do we correctly clean old data from this collection? Do we keep memory under given threshold?&lt;&#x2F;li&gt;
+&lt;li&gt;Are we processing a given request within acceptable time?&lt;&#x2F;li&gt;
+&lt;li&gt;Can we correctly fail-over to the secondary host? Will it preserve data?&lt;&#x2F;li&gt;
+&lt;li&gt;Are we getting to correct state after incidents or system specific events? Are we sharding correctly?&lt;&#x2F;li&gt;
+&lt;li&gt;Systems testing would fall under this category e.g., Jepsen testing&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Depending on technical challenges there may be very few or even no technical tests, it might turn out that having good observability can be enough.
+Note, that in a service based architecture functional tests may be served by a single service (probably most of them), or they might require half the system to be up and running, including databases and middleware.&lt;&#x2F;p&gt;
+&lt;p&gt;To be honest, in the end this kind of tests can also easily fall under functional category, &lt;strong&gt;after all ability to retain data by a database is its key functionality.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s useful to additionally &lt;strong&gt;divide tests by their running time&lt;&#x2F;strong&gt;, having two tags slow&#x2F;fast is generally sufficient. This makes it easy to frequently run &#x27;fast&#x27; tests during development and only rarely execute fully fledged slow, E2E tests.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;what-why-how&quot;&gt;What, why, how&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-why-how&quot; aria-label=&quot;Anchor link for: what-why-how&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;There is only one, singular primary goal for testing - &lt;strong&gt;to ensure correctness and quality&lt;&#x2F;strong&gt;, to achieve that the only way is to create simulations that can reliably imitate production environment. No rules will help us improve this part, it seems to boil down to engineer individual traits and experience. We can improve our chances by creating a process that might be conducive to quality (e.g. mandatory reviews) but in the end what matters is our (and reviewers) perception, experience and thoroughness with a pinch of paranoia.
+I believe this to be especially true for new functionality.&lt;&#x2F;p&gt;
+&lt;p&gt;Secondary goals are vital to keeping the system alive, open to change yet resistant to regressions. Tests should verify correctness for all critical functionality and at the same time &lt;strong&gt;they shouldn&#x27;t block us from making changes to existing code.&lt;&#x2F;strong&gt; That is why old-fashioned testing where every single function is white-box tested is atrocious, add to that plenty of mocking style testing (like checking if a given method was called X times) and we get a perfect recipe for codebase that will never evolve.
+&lt;strong&gt;What we really need is fearless code modifications&lt;&#x2F;strong&gt; else we end up with a brand-new legacy system.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s why the vast majority of our tests should be black-box functional tests of the API itself. &lt;strong&gt;What we want to know is that for a given inputs we get desired outputs or&#x2F;and side effects, the fact that our system internally uses hashmaps, linked lists, 17 functions spread throughout 10 classes and stores data as a JSON blob should be of no interest to us!&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;What we actually should do is to invoke the API itself with real, preferably resembling production data and see if the output matches our expectations:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;simplest_case.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;simplest_case.png&quot; alt=&quot;simplest_case&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;The inputs and outputs can be really anything, for example if the API is REST based then it&#x27;s best to fire real HTTP requests and validate HTTP responses. 
+The service in the diagram above can be anything really e.g. a calculator - we provide multiple important inputs &amp;quot;2+2&amp;quot;, &amp;quot;7*12&amp;quot;, &amp;quot;12&#x2F;0&amp;quot; and only validate outputs -&amp;gt; &amp;quot;HTTP 200: 4&amp;quot;, &amp;quot;HTTP 200: 84&amp;quot;, &amp;quot;HTTP 422: Division by 0&amp;quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;The time when implementation details might be important is when we need to validate side effects because we consider them the end-goal in itself - was an email sent? Was data written to disk? Sometimes it&#x27;s possible to side-step it but definitely not always, or at least it&#x27;s not always the reasonable approach.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;There are only two main reasons when functional tests should be modified, when API itself changes or when the existing functionality changes&lt;&#x2F;strong&gt; - though if we expect the change to be backwards compatible it&#x27;s probably better to write additional tests instead of modifying existing ones.&lt;&#x2F;p&gt;
+&lt;p&gt;Changing the API should be rare in practice when the project is out of infancy, and even then we might need to keep the old one alive in order to serve legacy clients.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Tests must be consistent and reliable.&lt;&#x2F;strong&gt; Tests that intermittently fail are just an annoying hindrance, people sooner or later stop paying attention to them letting the rot begin. Consistency is usually achieved by not relying on external, shared state and by avoiding the usual code smells like not using runtime provided dates and system clock, not using non-deterministic algorithms (like iterating over maps) etc. There are many other, better sources that describe in detail how to create consistent and reliable tests.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;external-services-side-effects-and-other-building-blocks&quot;&gt;External services, side effects and other building blocks&lt;a class=&quot;zola-anchor&quot; href=&quot;#external-services-side-effects-and-other-building-blocks&quot; aria-label=&quot;Anchor link for: external-services-side-effects-and-other-building-blocks&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;All the above works well and is quite easy to execute as long as our services don&#x27;t require external services, or potentially persistent state to function, for example a database. 
+In such cases it&#x27;s useful to leverage embedded versions if possible (e.g. Kafka provides such Java implementations) or slightly different, but mostly conforming (e.g. H2 in-mem database in tests in place of PostgreSQL that is used in production). If there are no such solutions, it might be worthwhile to create a test double (e.g. key-value store implemented as a hashmap). &lt;&#x2F;p&gt;
+&lt;p&gt;Most tests will work within a single service scope (and its direct dependencies, like middleware, databases etc.) resembling the following:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;side_effect_case.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;side_effect_case.png&quot; alt=&quot;side_effect_case&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;The filesystem in this diagram can be &lt;em&gt;any side effect&lt;&#x2F;em&gt;, in this case we can assume that one of expected functionalities under test is to write some transformed data to a filesystem in some specific format. We make API calls and can create assertions directly on the filesystem itself leveraging our test infrastructure. How it&#x27;s done internally by the service is inconsequential for correctness tests.&lt;&#x2F;p&gt;
+&lt;p&gt;More complex, multi-service example, production environment:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;real_sample.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;real_sample.png&quot; alt=&quot;real_sample&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Potential solution when tests are run locally:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;test_sample.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;test_sample.png&quot; alt=&quot;test_sample&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;The system must be nimble enough to work well in testing environment, databases should be easily built from scratch from scripts, state resettable and test data readily available etc. It requires more up-front work but usually is worth it in the end.&lt;&#x2F;p&gt;
+&lt;p&gt;The problem with this approach is that our embedded versions and in-memory test doubles might behave almost like real services - but almost is not always sufficient, and sometimes it&#x27;s really hard to simulate required functionality (e.g. proprietary cloud solutions).&lt;&#x2F;p&gt;
+&lt;p&gt;At this point it&#x27;s getting costly, but to alleviate such problems we can model our infrastructure as a code - including testing environment. If done well it makes it relatively easy to run all tests locally with test doubles and potentially substitute them with real implementations in our CI pipelines.&lt;&#x2F;p&gt;
+&lt;p&gt;With the rise of containerization, and Docker in particular, it&#x27;s slowly getting easier to test locally with real components instead of their mocks&#x2F;doubles, this can be facilitated e.g. by &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;testcontainers&#x2F;testcontainers-java&quot;&gt;Testcontainers&lt;&#x2F;a&gt;. Testcontainers integrate JUnit based tests with Docker containers running required infrastructure - this looks promising but unfortunately is not feasible for quick testing during development. The startup time is too slow to restart the state before each test and this is a problem that I don&#x27;t think can be solved anytime soon. Alternatively we could run a single instance of each component and force developers to &#x27;clean&#x27; the state after each test on their own - personally I haven&#x27;t seen much success with this approach (yet).&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The rule of a thumb is don&#x27;t use mocks (too much) unless there is no other sensible way&lt;&#x2F;strong&gt;. Use embedded versions, test doubles, sometimes custom implementations. Nonetheless, there are very legitimate situations where mocks are needed&#x2F;useful, a few examples:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Simulating failures&lt;&#x2F;li&gt;
+&lt;li&gt;Caching: we need to verify that the cache was actually hit to retrieve data.&lt;&#x2F;li&gt;
+&lt;li&gt;Sending emails: technically we could set up a real email server and check it there, but it seems a little too excessive in my opinion.&lt;&#x2F;li&gt;
+&lt;li&gt;3rd party services that are hard to emulate in a way that provides value (especially true in DevOps&#x2F;Cloud environments)&lt;&#x2F;li&gt;
+&lt;li&gt;testing on real infrastructure, or writing good test doubles is not worth the effort&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;It&#x27;s not enough to &lt;em&gt;verify&lt;&#x2F;em&gt; that a method on a mocked service was called, what we really want to know is if it worked - and in order to make sure that it worked we also must be sure that the expected contract with that service is fulfilled by both sides. Test environment should be a best effort simulation of production environment, the more we mock the more we lack in verisimilitude and loose confidence.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-testing-pyramid&quot;&gt;The testing pyramid&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-testing-pyramid&quot; aria-label=&quot;Anchor link for: the-testing-pyramid&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;The most commonly met &#x27;pyramid of automated testing&#x27; is probably the one done by Mike Cohn in &lt;em&gt;Succeeding with Agile&lt;&#x2F;em&gt;:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;pyramid_mike_cohn.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;pyramid_mike_cohn.png&quot; alt=&quot;simulation_setup&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;This approach might make a lot of sense when we think about convoluted monolith applications where the service&#x2F;functional boundaries are hard to draw, or when pretty much everything is dependent on everything else.&lt;&#x2F;p&gt;
+&lt;p&gt;Typical unit tests are quite useful either for more technical parts (checking if collections are empty, cleaned etc.), or places where running lots of functional tests is not feasible&#x2F;too costly, i.e. when we want to run hundreds of tests to test e.g. validations.&lt;&#x2F;p&gt;
+&lt;p&gt;Some people even suggest deleting such tests once verified, I&#x27;m not convinced about it, maybe we should just mark them with @Technical tag or something similar to let everyone know that this failing test doesn&#x27;t necessarily indicate correctness problems and might be a natural consequence of code refactoring.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;developer-workstation-suitable-for-running-the-system&quot;&gt;Developer workstation - suitable for running the system&lt;a class=&quot;zola-anchor&quot; href=&quot;#developer-workstation-suitable-for-running-the-system&quot; aria-label=&quot;Anchor link for: developer-workstation-suitable-for-running-the-system&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;There is a huge jump in productivity, communication overhead and simplicity once all tests can be run on a local machine. Such tests are trivially debuggable and usually don&#x27;t require shared resources - or such resources are created from scratch on-demand. This is &lt;strong&gt;cost, time and communication-wise far more efficient to maintaining many shared environments.&lt;&#x2F;strong&gt;
+Not to mention all the problems that we get from such environments, especially when the team grows significantly.&lt;&#x2F;p&gt;
+&lt;p&gt;If a system is so big that it can&#x27;t really fit into a single machine, we can write E2E tests in a slightly more sophisticated way. It&#x27;s rare that any given functionality or flow requires the whole system to be up and running, instead we can declare which services are required for a test and run only those.
+Obviously there is a theoretical limit, technically a system might be too big to fit into a single machine for testing purposes, that limit is quite far and only getting pushed further every single year.&lt;&#x2F;p&gt;
+&lt;p&gt;For very, very large systems it might not be feasible to write a lot of system-wide functional tests, in such cases we&#x27;ll most likely end up with most tests scope limited to a few&#x2F;single service and only a handful of system-wide end to end tests (potentially executed on an external system, daily) - if we really deem them necessary.&lt;&#x2F;p&gt;
+&lt;p&gt;If your company has enough resources (and is willing) to provide each developer with his own production-like environment on demand, then good for you.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tdd-regressions&quot;&gt;TDD, regressions&lt;a class=&quot;zola-anchor&quot; href=&quot;#tdd-regressions&quot; aria-label=&quot;Anchor link for: tdd-regressions&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Every single regression should be covered by a test, a test written before doing any fixes. Actually, regressions are the perfect place where TDD actually yields reasonable benefits. &lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Other than that and &lt;em&gt;maybe&lt;&#x2F;em&gt; maintenance type development TDD sounds like a huge pile of inefficiency&lt;&#x2F;strong&gt;, especially for newly written parts that aren&#x27;t heavily coupled with existing codebase. Maybe I&#x27;m just not that great developer but implementing new software seems to be a continuous process interleaved with designing and coding. I start with rough drafts and ideas but by the end these tend to differ a lot from final implementation, even APIs evolve significantly in the process.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;caveats-closing-words&quot;&gt;Caveats &#x2F; Closing words&lt;a class=&quot;zola-anchor&quot; href=&quot;#caveats-closing-words&quot; aria-label=&quot;Anchor link for: caveats-closing-words&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;This is already too long, yet I feel like we only scratched the surface. My original idea was way too ambitious for a single blog post, I wanted to cover things like test &lt;em&gt;elegance&lt;&#x2F;em&gt;, coverage, formal methods, prod-pars, test DSLs, configuration setup and provide actual code samples, regrettably it turned out that almost each one could be a separate post on its own. &lt;&#x2F;p&gt;
+&lt;p&gt;Lastly, you can&#x27;t catch all bugs, quality assurance is getting unreasonably expensive very quickly for general purpose software. Sometimes it&#x27;s just better to fail fast, eat the cost and move on.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;links&quot;&gt;Links:&lt;a class=&quot;zola-anchor&quot; href=&quot;#links&quot; aria-label=&quot;Anchor link for: links&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;danluu.com&#x2F;postmortem-lessons&#x2F;&quot;&gt;Postmortem lessons by Dan Luu&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;danluu.com&#x2F;tests-v-reason&#x2F;&quot;&gt;Testing v. informal reasoning by Dan Luu&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;copyconstruct.medium.com&#x2F;testing-microservices-the-sane-way-9bb31d158c16&quot;&gt;Testing microservices the sane way by Copy Construct&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Wire formats - comparison &amp; benchmarking</title>
+		<published>2021-04-04T00:00:00+00:00</published>
+		<updated>2021-04-04T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/posts/2021-04-04-wire-formats/"/>
+		<link rel="alternate" href="https://www.laeith.com/posts/2021-04-04-wire-formats/" type="text/html"/>
+		<id>https://www.laeith.com/posts/2021-04-04-wire-formats/</id>
+		<content type="html">&lt;p&gt;Every time we want to send data from one system to another over network, or to a file, we have to somehow represent it in bytes, this is achieved by data encoding. It&#x27;s a translation of in-memory objects to byte sequences and &lt;em&gt;vice versa&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;This article will present several formats by comparing their performance and considering basic ease of use. Alongside benchmarking the goal is to find a suitable serialization method for my distributed system communication, it should be reasonably fast and must seamlessly integrate between multiple subsystems written in Java, Python and Rust.&lt;&#x2F;p&gt;
+&lt;p&gt;Given that applications evolve it&#x27;s reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it&#x27;s vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann &#x27;Designing Data-Intensive Applications&#x27; chapter 4, or &lt;a href=&quot;https:&#x2F;&#x2F;martin.kleppmann.com&#x2F;2012&#x2F;12&#x2F;05&#x2F;schema-evolution-in-avro-protocol-buffers-thrift.html&quot;&gt;his excellent post about it&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;methodology&quot;&gt;Methodology&lt;a class=&quot;zola-anchor&quot; href=&quot;#methodology&quot; aria-label=&quot;Anchor link for: methodology&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;I&#x27;m going to compare simple scenarios like serialization, deserialization and sometimes special combinations using provided Java clients for each respective format.&lt;&#x2F;p&gt;
+&lt;p&gt;Micro-benchmarking is notoriously tricky to get right, and even when we get it right it&#x27;s hard to draw correct conclusions. On top of that, I&#x27;m using a JVM-based language that makes it even worse. Profiling is a must, even with these simple benchmarks I had to profile the code to weed out quite a few obvious problems.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s turns out it&#x27;s crucial to use data that is &lt;strong&gt;as close to production data as possible&lt;&#x2F;strong&gt;, for benchmarking I used a message schema that is fairly representative for my use-case - but schema can make &lt;em&gt;significant&lt;&#x2F;em&gt; difference.
+Additionally, performance will vary depending not only on &lt;strong&gt;how you use the client but also what client is used&lt;&#x2F;strong&gt; (i.e. Java Avro client vs C++ Avro client etc.) &lt;&#x2F;p&gt;
+&lt;p&gt;Note that the purpose of this benchmark is to &lt;em&gt;compare&lt;&#x2F;em&gt; serialization&#x2F;deserialization speed, this means that these values probably don&#x27;t represent &#x27;optimal&#x27; speed that could be achieved - there are potential optimizations that could be applied like: avoid autoboxing, using alternative client&#x2F;approach, using more judicious types (do we really need an int for a version field?) etc.
+Unfortunately it means that this might be unfair for some formats, especially those that allow for more fine-grained control.
+On the other hand, &lt;strong&gt;it&#x27;s probably better to measure the most likely usage&lt;&#x2F;strong&gt; instead of trying to hyper-tune everything - &lt;a href=&quot;https:&#x2F;&#x2F;benchmarksgame-team.pages.debian.net&#x2F;benchmarksgame&#x2F;index.html&quot;&gt;to see where hyper optimization may lead, see Benchmarks Game source codes.&lt;&#x2F;a&gt; I tried my best to balance fairness with &#x27;typical usage&#x27;.&lt;&#x2F;p&gt;
+&lt;p&gt;Last but not least, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;laeith&#x2F;playground&#x2F;tree&#x2F;master&#x2F;src&#x2F;main&#x2F;java&#x2F;com&#x2F;laeith&#x2F;playground&#x2F;wire&quot;&gt;the code for these benchmarks is available here.&lt;&#x2F;a&gt; Improvement suggestions highly appreciated.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Protobuf schema&lt;&#x2F;strong&gt;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#fdf6e3;&quot;&gt;
+&lt;code class=&quot;language-protobuf&quot; data-lang=&quot;protobuf&quot;&gt;&lt;span style=&quot;color:#657b83;&quot;&gt;message PingPong {
+  int64 id = 1;                 &#x2F;&#x2F; 1
+  int32 version = 2;            &#x2F;&#x2F; 2
+  string message = 3;           &#x2F;&#x2F; &amp;quot;Random message - &amp;quot; + System.currentTimeMillis()
+  bool is_important = 4;        &#x2F;&#x2F; true
+  repeated string names = 5;    &#x2F;&#x2F; [&amp;quot;John-1&amp;quot;, &amp;quot;John-1&amp;quot;, &amp;quot;John-2&amp;quot;]
+  repeated int32 ints = 6;      &#x2F;&#x2F; [1, 22, 333, 4444, 55555]
+  repeated double doubles = 7;  &#x2F;&#x2F; [1.132314, 2.111111, 3.314155, 4.1231488, 5.12395832]
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Other formats have equivalent&#x2F;similar schemas, for details see code.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;benchmarks&quot;&gt;Benchmarks&lt;a class=&quot;zola-anchor&quot; href=&quot;#benchmarks&quot; aria-label=&quot;Anchor link for: benchmarks&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Let&#x27;s cut to the chase, on my desktop (Ryzen 3900x): throughput - &lt;strong&gt;more is better&lt;&#x2F;strong&gt;, ± stands for confidence interval (at 99.9%):&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;main_chart.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;main_chart.png&quot; alt=&quot;Main chart&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;&lt;strong&gt;Tabular:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;table_full.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;table_full.png&quot; alt=&quot;Table full&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;There are a few surprises, the first one is relatively poor performance for the default Avro client usage, results are almost on par with typical JSON read&#x2F;write speed. I definitely expected better.&lt;&#x2F;p&gt;
+&lt;p&gt;For Avro serialization I also provide slightly more optimized version while I&#x27;m not doing the same for deserialization. For a typical user I consider it to be a little too error-prone to operate on a single mutable object&#x2F;ByteBuffer post deserialization, especially when it&#x27;s not advised as &#x27;the standard approach&#x27;. Eventually, it can perform quite well during serialization, see &#x27;Why benchmarking is tricky part 1&#x27; below for details.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The format itself is only partially responsible for speed, it sets a theoretical upper limit&lt;&#x2F;strong&gt;. Typical JSON serialization as done in Jackson (via reflection) has very polished user experience but performs rather poorly. Surprisingly, DSL-Json shows how much can be achieved by a &lt;del&gt;better&lt;&#x2F;del&gt; faster implementation. I have to admit that this lets-generate-classes-during-compilation approach turned out to be quite seamless and performance improvements - 50% higher throughput in serialization and twice as fast during reading - are impressive.
+DSL-Json is a strong contender when external systems enforce JSON usage.&lt;&#x2F;p&gt;
+&lt;p&gt;Payload size is the smallest for Protobuf, that&#x27;s reasonable given that the padding doesn&#x27;t take space. The other side of spectrum is taken by textual formats, this is especially pronounced when a schema is heavily skewed towards numeric data.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;simple-binary-encoding&quot;&gt;Simple binary encoding&lt;a class=&quot;zola-anchor&quot; href=&quot;#simple-binary-encoding&quot; aria-label=&quot;Anchor link for: simple-binary-encoding&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;SBE requires a separate paragraph on its own. The format uses a very interesting &amp;quot;zero-copy&amp;quot; approach which gives the best speed results by far. This gives not only the best throughput but also the lowest latency (not measured in this particular benchmark). Zero-copy means that it tries to avoid costly encode&#x2F;decode steps and reuse pre-allocated objects&#x2F;buffers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;SBE allocation graph:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;sbe_allocation.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;sbe_allocation.png&quot; alt=&quot;SBE allocation flamegraph&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;&lt;strong&gt;Protobuf allocations for comparison:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;protobuff_allocation_serialization.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;protobuff_allocation_serialization.png&quot; alt=&quot;Protobuf allocation flamegraph&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Provided that we can make full use of that and don&#x27;t do any unnecessary copying in the business logic (and apply a few more performance tricks) it&#x27;s possible to achieve outstanding results, all on a single pinned thread.&lt;&#x2F;p&gt;
+&lt;p&gt;Unfortunately this comes at a price of usability: schema is very extensive and verbose, reading&#x2F;writing requires operating on Bytes&#x2F;Buffers semi-directly, and the marriage with business logic is also quite cumbersome. At least infamous XML has good tooling&#x2F;IDE support out of the box. I&#x27;d say it might be a reasonable price to pay if speed is the dominant requirement and we have lots of time.&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;sbe_schema.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;sbe_schema.png&quot; alt=&quot;Simple binary encoding schema&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;There are other &amp;quot;zero-copy&amp;quot; formats like &lt;strong&gt;Cap&#x27;n Proto&lt;&#x2F;strong&gt; and &lt;strong&gt;FlatBuffers&lt;&#x2F;strong&gt;, maybe these are slightly more user-friendly. Though, it&#x27;s not obvious how to make it more convenient without sacrificing performance.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;why-benchmarking-is-tricky-part-1-client-usage&quot;&gt;Why benchmarking is tricky part 1: Client usage&lt;a class=&quot;zola-anchor&quot; href=&quot;#why-benchmarking-is-tricky-part-1-client-usage&quot; aria-label=&quot;Anchor link for: why-benchmarking-is-tricky-part-1-client-usage&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Even a single client can be used in multiple ways, this is especially acute in case of Avro where &lt;em&gt;the naive&lt;&#x2F;em&gt; usage provides speeds on par with JSON, but two relatively minor changes can give us 2.5x improvement:&lt;&#x2F;p&gt;
+&lt;p&gt;&#x27;Typical&#x2F;pure&#x27; Avro serialization usage: &lt;strong&gt;1132 ± 27 ops&#x2F;ms&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;When we take a look at CPU flame graph it becomes obvious what&#x27;s the problem:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;avro_pre_builder_reuse.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;avro_pre_builder_reuse.png&quot; alt=&quot;Avro pre flamegraph&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;In the naive implementation we spend half the time for builders recreation on each pass. Results after introducing message builder and bytebuffer reuse:&lt;&#x2F;p&gt;
+&lt;p&gt;Avro serialization with optimizations: &lt;strong&gt;2550 ± 109 ops&#x2F;ms&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;avro_post_fix.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;avro_post_fix.png&quot; alt=&quot;Avro post flamegraph&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Much better. Interestingly, reusing builders in Protobuf Java implementation is counterproductive and yields similar performance results.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s one of the reasons benchmarking on your own is important, even if someone achieves poor results in their application it doesn&#x27;t mean that you must suffer the same fate in your system.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;why-benchmarking-is-tricky-part-2-schema-impact&quot;&gt;Why benchmarking is tricky part 2: Schema impact&lt;a class=&quot;zola-anchor&quot; href=&quot;#why-benchmarking-is-tricky-part-2-schema-impact&quot; aria-label=&quot;Anchor link for: why-benchmarking-is-tricky-part-2-schema-impact&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Assuming we get reasonably reliable results it&#x27;s still not so easy to apply it in real world. Let&#x27;s say that we use the abovementioned benchmarks to guide our choices, let&#x27;s say that for our requirements Protobuf is too slow. In practice, it turns out that most or all of our data is represented by doubles, if we do the benchmark we get:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#fdf6e3;&quot;&gt;
+&lt;code class=&quot;language-protobuf&quot; data-lang=&quot;protobuf&quot;&gt;&lt;span style=&quot;color:#657b83;&quot;&gt;message DoublesMsg {
+  double double1 = 1;           &#x2F;&#x2F; 1.1234567899
+  double double2 = 2;           &#x2F;&#x2F; 2.1234567899
+  double double3 = 3;           &#x2F;&#x2F; 3.1234567899
+  double double4 = 4;           &#x2F;&#x2F; 4.1234567899
+  double double5 = 5;           &#x2F;&#x2F; 5.1234567899
+  repeated double doubles = 6;  &#x2F;&#x2F; [1.132314, 2.111111, 3.314155, 4.1231488, 5.12395832]
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;table_doubles.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;table_doubles.png&quot; alt=&quot;Doubles benchmark&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Explanation for enormous speed up for Protobuf, and lack of any change for JSON is probably obvious for an attentive engineer. Logic behind this is left as an exercise for the reader.&lt;&#x2F;p&gt;
+&lt;p&gt;Hint, benchmarks with comparable string-only data size when serialized to JSON:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;table_string.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;table_string.png&quot; alt=&quot;Strings benchmark&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;micro-benchmarking-is-it-worth-it&quot;&gt;Micro-benchmarking, is it worth it?&lt;a class=&quot;zola-anchor&quot; href=&quot;#micro-benchmarking-is-it-worth-it&quot; aria-label=&quot;Anchor link for: micro-benchmarking-is-it-worth-it&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;All problems with doing such micro-benchmarks make me wonder how much value they provide. I guess they are a good hint at what can potentially perform well, nonetheless I believe that doing a production-like end-to-end performance testing is necessary anyway - it&#x27;s far too easy to make a small mistake in business logic that completely trumps any gains from faster serialization framework.&lt;&#x2F;p&gt;
+&lt;p&gt;Benchmarking, especially &lt;strong&gt;comparison when we aren&#x27;t experts in a given technology, is hard&lt;&#x2F;strong&gt;: usually it&#x27;s advised to write two versions alongside and check differences, but even in only slightly more complex scenarios &lt;strong&gt;writing two &lt;em&gt;same&lt;&#x2F;em&gt; versions might be a non-obvious task&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;In the end, does it really make any difference?
+Well, for high frequency trading it can be of paramount importance when end-to-end processing time is typically measured in microseconds (even 10s of microseconds - without using FPGAs&#x2F;ASICs).
+On the other hand, if business logic takes milliseconds, or it does disk I&#x2F;O, or it makes external calls, then serialization time &lt;strong&gt;might be on par with measurement error.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Having spent a few days toying with different formats and clients I settled with Protobuf. I was tempted to give SBE a try hoping that I could come up with a seamless abstraction over the client - but it doesn&#x27;t seem to have good clients outside of Java and C++.
+Protobuf definitely isn&#x27;t the fastest, but it seems to provide a good balance between performance and usability&#x2F;time-to-market. On top of that, due to its ubiquity it&#x27;s almost as easy to find performant clients in any language as it is for JSON.&lt;&#x2F;p&gt;
+&lt;p&gt;In the future it might be useful to extend my benchmarks to measure performance per payload size, after all serialization&#x2F;deserialization might not scale linearly i.e. due to implementation details.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;footnotes&quot;&gt;Footnotes&lt;a class=&quot;zola-anchor&quot; href=&quot;#footnotes&quot; aria-label=&quot;Anchor link for: footnotes&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;laeith&#x2F;playground&#x2F;tree&#x2F;master&#x2F;src&#x2F;main&#x2F;java&#x2F;com&#x2F;laeith&#x2F;playground&#x2F;wire&quot;&gt;Benchmarks codebase&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jvm-profiling-tools&#x2F;async-profiler&quot;&gt;Async profiler for performance investigation&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;capnproto.org&#x2F;news&#x2F;2014-06-17-capnproto-flatbuffers-sbe.html&quot;&gt;Zero-copy formats overview by kentonv&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>About</title>
+		<published>2021-03-03T00:00:00+00:00</published>
+		<updated>2021-03-03T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/other/about/"/>
+		<link rel="alternate" href="https://www.laeith.com/other/about/" type="text/html"/>
+		<id>https://www.laeith.com/other/about/</id>
+		<content type="html">&lt;p&gt;This started out as a way to practice my English skills. I usually make an honest attempt at writing something useful, mostly as a source of clarity, discipline and innovation for myself.
+It turns out that it&#x27;s surprisingly hard to present ideas clearly, precisely and concisely, perfecting it is a long, bumpy road.&lt;&#x2F;p&gt;
+&lt;p&gt;Hopefully this will help.&lt;&#x2F;p&gt;
+&lt;p&gt;Privately I&#x27;m a mix of a software engineer, amateur investor, peasant philosopher, literature enthusiast and a few other things. Freedom advocate and Brazilian Jiu-Jitsu novice.
+Expect the oddest from each. Recently I&#x27;ve been mostly busy learning and exploring various areas of computer science and software engineering, given that I expect the majority of writing to be of technical nature.&lt;&#x2F;p&gt;
+&lt;p&gt;One can find my smaller pieces of work &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;laeith&#x2F;comp-sci-excursions&quot;&gt;here&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;If you want to contact me feel free to do so at marcin.mazurkiewicz@laeith.com&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;marcin-mazurkiewicz-aa57b278&#x2F;&quot;&gt;&lt;strong&gt;LinkedIn&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Do you want to create a blog?</title>
+		<published>2021-03-03T00:00:00+00:00</published>
+		<updated>2021-03-03T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/"/>
+		<link rel="alternate" href="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/" type="text/html"/>
+		<id>https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/</id>
+		<content type="html">&lt;p&gt;Do you want to write an article or two? Sounds great, but one will inevitably face the main problem - where to start?
+Turns out there are many ways to start, fortunately most of them seem to have relatively obvious trade-offs.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;basic-requirements&quot;&gt;Basic requirements&lt;a class=&quot;zola-anchor&quot; href=&quot;#basic-requirements&quot; aria-label=&quot;Anchor link for: basic-requirements&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Fom the very start I knew that this must be simple, not only because of my poor web skills but also because I didn&#x27;t really want to spend much time on the technical side.&lt;&#x2F;p&gt;
+&lt;p&gt;I had only a few requirements that can be summed up as:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Low-effort, mostly works out of the box&lt;&#x2F;li&gt;
+&lt;li&gt;Must be local friendly, I really want to have the content on my disk&lt;&#x2F;li&gt;
+&lt;li&gt;Usable with version control system&lt;&#x2F;li&gt;
+&lt;li&gt;Preferably based on Markdown with basic support for images, syntax highlighting, linking etc.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;There are many options out there, starting from a fully featured, ready-to-use platforms like &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-03-03-how-to-create-a-blog&#x2F;www.medium.com&quot;&gt;medium&lt;&#x2F;a&gt; with WYSIWYG interface through static-site generators (SSG) and ending with custom DIY solutions.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fully-featured-hosted-solutions-medium-com-dev-to-etc&quot;&gt;Fully featured, hosted solutions - medium.com, dev.to etc.&lt;a class=&quot;zola-anchor&quot; href=&quot;#fully-featured-hosted-solutions-medium-com-dev-to-etc&quot; aria-label=&quot;Anchor link for: fully-featured-hosted-solutions-medium-com-dev-to-etc&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Probably the most common hosted solution is Medium, there are a few other choices in this category (e.g. Blogger) but they mostly share the same problems. Paradoxically, the main problem with these solutions is that they must somehow make money but running a blogging platform... seems to be a very hard business. Medium launched in 2012 and &lt;a href=&quot;https:&#x2F;&#x2F;www.niemanlab.org&#x2F;2019&#x2F;03&#x2F;the-long-complicated-and-extremely-frustrating-history-of-medium-2012-present&#x2F;&quot;&gt;apparently seven years later they still can&#x27;t make it even.&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Since publishing is free, and they really have to make at least some money to make the business viable they went after readers, either directly or by gathering data about them.
+This unfortunately sooner or later leads to questionable decisions, like welcoming readers with such atrocities:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-03-03-how-to-create-a-blog&#x2F;medium_banner.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-03-03-how-to-create-a-blog&#x2F;medium_banner.png&quot; alt=&quot;Medium welcoming banner&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Not to mention the nagging to download their mobile app, popping social media integrations, &lt;em&gt;almost&lt;&#x2F;em&gt; working RSS.&lt;&#x2F;p&gt;
+&lt;p&gt;On the upside, theoretically, such platforms should make it easier to promote new blogs, make it easy to reach new audiences.
+That&#x27;s probably a lot of value if one wants to commercialize writing. I would also say that the easy of use for publishers is a huge
+benefit - no hosting, not so much tweaking etc. Especially for non-tech-savvy people sounds like a good deal. &lt;&#x2F;p&gt;
+&lt;h3 id=&quot;static-site-generator-gatsby-jekyll-zola-hugo-pelican-and-others&quot;&gt;Static site generator - Gatsby, Jekyll, Zola, Hugo, Pelican and others&lt;a class=&quot;zola-anchor&quot; href=&quot;#static-site-generator-gatsby-jekyll-zola-hugo-pelican-and-others&quot; aria-label=&quot;Anchor link for: static-site-generator-gatsby-jekyll-zola-hugo-pelican-and-others&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;This is an interesting niche, looks like static site generators exploded during last decade, there are so many that it&#x27;s even hard to enumerate them. One can probably find an SSG written in every single popular language, sometimes even a few. It&#x27;s an almost perfect solution for software engineers and tech tinkerers, it&#x27;s also this type of software that is probably fun to write (probably the reason for huge population).&lt;&#x2F;p&gt;
+&lt;p&gt;Static site generator is an application that creates raw HTML pages from different templates&#x2F;components. This is a simple alternative to bigger systems such as Wordpress or Drupal. The sheer beauty of such solutions lies in simplicity (given at least basic programming skills), we download a sample theme, create a few Markdown-based articles and press &#x27;generate&#x27;. 
+A few milliseconds later we get a directory fully of static webpages ready to be deployed, at least in theory.&lt;&#x2F;p&gt;
+&lt;p&gt;There are two main distractions faced up-front:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Initial configuration&lt;&#x2F;li&gt;
+&lt;li&gt;Deployment&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;There is definitely &lt;em&gt;some&lt;&#x2F;em&gt; cost that needs to be paid up-front, this is especially true for the configuration part. I&#x27;d strongly recommend generators that provide single binaries. It makes it trivial to get everything up and running:&lt;&#x2F;p&gt;
+&lt;div class=&quot;post__image&quot;&gt;
+  &lt;a href=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-03-03-how-to-create-a-blog&#x2F;zola_serve.png&quot; class=&quot;image-link&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-03-03-how-to-create-a-blog&#x2F;zola_serve.png&quot; alt=&quot;Zola serve&quot;&gt;
+  &lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;On top of simplicity &lt;strong&gt;we get consistency&lt;&#x2F;strong&gt;, I used to toy a little with Python-based solution &amp;quot;Pelican&amp;quot;, getting it up and running tends to be an irregular experience - installing Python, getting pip, getting dependencies and finally running efforts might vary from very straightforward to a multi-hour battle (Python2 clashes with Python3, pip missing&#x2F;clashes, incorrect dependencies, setting up virtual environments, trying to build old blogs that didn&#x27;t have version specified...). With single-binary solution we can put it into a repository and forget about all these problems once and for all.&lt;&#x2F;p&gt;
+&lt;p&gt;Unfortunately the remaining part of configuration is more time-demanding, picking a starting theme, understanding template engine, doing basic modifications and making sure that everything works (images, syntax highlighting, shortcodes, archive) is a few hours effort at the minimum.&lt;&#x2F;p&gt;
+&lt;p&gt;Surprisingly, because the end product we get is a bunch of static files It&#x27;s trivial to get it up and running in public - the market is big enough to have many quick solutions ready, to name a few: Netlify, GitGub Pages, GitLab Pages... with SSGs having documentation for each major platform - e.g. &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;documentation&#x2F;deployment&#x2F;github-pages&#x2F;&quot;&gt;Zola for GitHub Pages&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fully-dyi-approach-creating-a-blog-platform-from-scratch&quot;&gt;Fully DYI approach, creating a blog platform from scratch&lt;a class=&quot;zola-anchor&quot; href=&quot;#fully-dyi-approach-creating-a-blog-platform-from-scratch&quot; aria-label=&quot;Anchor link for: fully-dyi-approach-creating-a-blog-platform-from-scratch&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;I believe that unless you&#x27;re trying to create a feature rich portal with potential of having lots of custom features, at least the size of &lt;a href=&quot;https:&#x2F;&#x2F;www.artofmanliness.com&#x2F;&quot;&gt;Art of Manliness&lt;&#x2F;a&gt; you shouldn&#x27;t even think about it. Even then it&#x27;s probably better to start with something dirty and quick, only eventually moving to a custom solution.&lt;&#x2F;p&gt;
+&lt;p&gt;Something that I outright crossed as a no-go. There is no way I would be able to justify time spent on creating a blogging platform from scratch, this sounds like a great idea for a 1st year student that wants to be a front-end developer - and I&#x27;m not entirely sure about that either.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;final-words&quot;&gt;Final words&lt;a class=&quot;zola-anchor&quot; href=&quot;#final-words&quot; aria-label=&quot;Anchor link for: final-words&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;&#x2F;i&gt;&lt;&#x2F;a&gt; 
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Having evaluated most choices I settled with an SSG - &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getzola&#x2F;zola&quot;&gt;Zola&lt;&#x2F;a&gt;, I&#x27;m not sure if it&#x27;s much better than e.g. Hugo as both provide very polished basic functionality and I don&#x27;t really have any use for the more advanced ones. Hugo is definitely better when it comes to the number of templates readily available, Zola is a much younger project. Ruby fans should take a closer look at &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jekyll&#x2F;jekyll&quot;&gt;Jekyll&lt;&#x2F;a&gt; and Python professionals might be content with &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getpelican&#x2F;pelican&#x2F;&quot;&gt;Pelican.&lt;&#x2F;a&gt;
+Because all of them support Markdown it shouldn&#x27;t be that hard to switch (assuming simple templates) if something goes wrong.&lt;&#x2F;p&gt;
+&lt;p&gt;This might not be the best choice for people that &#x27;just want to start blogging, &lt;strong&gt;right now&lt;&#x2F;strong&gt;&#x27;, for such people I&#x27;d recommend looking into hosted solutions like Medium or Blogger. Yes, they have their problems but sometimes nothing beats ease of use. People, especially programmers tend to underappreciate how much time can be saved with not perfect but perfectly good-enough solutions.&lt;&#x2F;p&gt;
+&lt;p&gt;On the other hand static site generators seem to be the best choice for novice, tech-savvy bloggers, especially if they don&#x27;t really want to make money out of it. So far I&#x27;m quite pleased with my choice.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Archive</title>
+		<published>2019-11-27T00:00:00+00:00</published>
+		<updated>2019-11-27T00:00:00+00:00</updated>
+		<link href="https://www.laeith.com/other/archive/"/>
+		<link rel="alternate" href="https://www.laeith.com/other/archive/" type="text/html"/>
+		<id>https://www.laeith.com/other/archive/</id>
+		<content type="html"></content>
+	</entry>
+</feed>

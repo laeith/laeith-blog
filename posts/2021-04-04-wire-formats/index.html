@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+        <title>Wire formats - comparison &amp; benchmarking | Tapestry</title>
+<meta property="og:title" content="Wire formats - comparison &amp; benchmarking | Tapestry" />
+<meta name="twitter:title" content="Wire formats - comparison &amp; benchmarking | Tapestry" />
+
+        <meta name="description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+        <meta property="og:description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+        <meta name="twitter:description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+
+        <meta property="og:site_name" content="Tapestry" />
+        <meta property="og:url" content="https:&#x2F;&#x2F;www.laeith.com" />
+
+        
+
+
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;base.css" />
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;fontawesome.css" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;brands.css" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;solid.css" rel="stylesheet">
+
+        <link rel='icon' type='image/x-icon' href="https:&#x2F;&#x2F;www.laeith.com&#x2F;favicon.ico" />
+
+        <link rel="alternate" type="application/atom+xml" title="Tapestry" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;atom.xml">
+
+        
+
+    </head>
+    <body class="l-body">
+        <a href="#main" class="skip-link p-screen-reader-text">Skip to content</a>
+        <header class="l-header">
+            <h1 class="c-title p-title"><a href="https:&#x2F;&#x2F;www.laeith.com" class="p-title__link">Tapestry</a></h1>
+            <p class="p-subtitle">
+                weave until it hopefully makes sense
+            </p>
+            </header>
+
+        <main id="main" class="l-main">
+            
+<article class="p-article">
+        <h1>Wire formats - comparison &amp; benchmarking</h1>
+            <div class="c-time">
+                <time datetime="2021-04-04">
+                    2021-04-04
+                </time>
+            </div>
+    
+    <section id="js-article" class="p-article__body">
+        
+    <p>Every time we want to send data from one system to another over network, or to a file, we have to somehow represent it in bytes, this is achieved by data encoding. It's a translation of in-memory objects to byte sequences and <em>vice versa</em>.</p>
+<p>This article will present several formats by comparing their performance and considering basic ease of use. Alongside benchmarking the goal is to find a suitable serialization method for my distributed system communication, it should be reasonably fast and must seamlessly integrate between multiple subsystems written in Java, Python and Rust.</p>
+<p>Given that applications evolve it's reasonable to assume that our communication will evolve as well, on top of it might not be possible to update all systems at once, and we may be forced to do a rolling-update. For such scenarios it's vital to analyze how schema can evolve. Fortunately for me this is considered a second-tier requirement at the moment - but for anyone interested I suggest taking a look at Martin Kleppmann 'Designing Data-Intensive Applications' chapter 4, or <a href="https://martin.kleppmann.com/2012/12/05/schema-evolution-in-avro-protocol-buffers-thrift.html">his excellent post about it</a>.</p>
+<h3 id="methodology">Methodology<a class="zola-anchor" href="#methodology" aria-label="Anchor link for: methodology"><i class="fas fa-link"></i></a> 
+</h3>
+<p>I'm going to compare simple scenarios like serialization, deserialization and sometimes special combinations using provided Java clients for each respective format.</p>
+<p>Micro-benchmarking is notoriously tricky to get right, and even when we get it right it's hard to draw correct conclusions. On top of that, I'm using a JVM-based language that makes it even worse. Profiling is a must, even with these simple benchmarks I had to profile the code to weed out quite a few obvious problems.</p>
+<p>It's turns out it's crucial to use data that is <strong>as close to production data as possible</strong>, for benchmarking I used a message schema that is fairly representative for my use-case - but schema can make <em>significant</em> difference.
+Additionally, performance will vary depending not only on <strong>how you use the client but also what client is used</strong> (i.e. Java Avro client vs C++ Avro client etc.) </p>
+<p>Note that the purpose of this benchmark is to <em>compare</em> serialization/deserialization speed, this means that these values probably don't represent 'optimal' speed that could be achieved - there are potential optimizations that could be applied like: avoid autoboxing, using alternative client/approach, using more judicious types (do we really need an int for a version field?) etc.
+Unfortunately it means that this might be unfair for some formats, especially those that allow for more fine-grained control.
+On the other hand, <strong>it's probably better to measure the most likely usage</strong> instead of trying to hyper-tune everything - <a href="https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html">to see where hyper optimization may lead, see Benchmarks Game source codes.</a> I tried my best to balance fairness with 'typical usage'.</p>
+<p>Last but not least, <a href="https://github.com/laeith/playground/tree/master/src/main/java/com/laeith/playground/wire">the code for these benchmarks is available here.</a> Improvement suggestions highly appreciated.</p>
+<p><strong>Protobuf schema</strong>:</p>
+<pre style="background-color:#fdf6e3;">
+<code class="language-protobuf" data-lang="protobuf"><span style="color:#657b83;">message PingPong {
+  int64 id = 1;                 // 1
+  int32 version = 2;            // 2
+  string message = 3;           // &quot;Random message - &quot; + System.currentTimeMillis()
+  bool is_important = 4;        // true
+  repeated string names = 5;    // [&quot;John-1&quot;, &quot;John-1&quot;, &quot;John-2&quot;]
+  repeated int32 ints = 6;      // [1, 22, 333, 4444, 55555]
+  repeated double doubles = 7;  // [1.132314, 2.111111, 3.314155, 4.1231488, 5.12395832]
+}
+</span></code></pre>
+<p>Other formats have equivalent/similar schemas, for details see code.</p>
+<h3 id="benchmarks">Benchmarks<a class="zola-anchor" href="#benchmarks" aria-label="Anchor link for: benchmarks"><i class="fas fa-link"></i></a> 
+</h3>
+<p>Let's cut to the chase, on my desktop (Ryzen 3900x): throughput - <strong>more is better</strong>, ± stands for confidence interval (at 99.9%):</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/main_chart.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/main_chart.png" alt="Main chart">
+  </a>
+</div>
+<p><strong>Tabular:</strong></p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/table_full.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/table_full.png" alt="Table full">
+  </a>
+</div>
+<p>There are a few surprises, the first one is relatively poor performance for the default Avro client usage, results are almost on par with typical JSON read/write speed. I definitely expected better.</p>
+<p>For Avro serialization I also provide slightly more optimized version while I'm not doing the same for deserialization. For a typical user I consider it to be a little too error-prone to operate on a single mutable object/ByteBuffer post deserialization, especially when it's not advised as 'the standard approach'. Eventually, it can perform quite well during serialization, see 'Why benchmarking is tricky part 1' below for details.</p>
+<p><strong>The format itself is only partially responsible for speed, it sets a theoretical upper limit</strong>. Typical JSON serialization as done in Jackson (via reflection) has very polished user experience but performs rather poorly. Surprisingly, DSL-Json shows how much can be achieved by a <del>better</del> faster implementation. I have to admit that this lets-generate-classes-during-compilation approach turned out to be quite seamless and performance improvements - 50% higher throughput in serialization and twice as fast during reading - are impressive.
+DSL-Json is a strong contender when external systems enforce JSON usage.</p>
+<p>Payload size is the smallest for Protobuf, that's reasonable given that the padding doesn't take space. The other side of spectrum is taken by textual formats, this is especially pronounced when a schema is heavily skewed towards numeric data.</p>
+<h3 id="simple-binary-encoding">Simple binary encoding<a class="zola-anchor" href="#simple-binary-encoding" aria-label="Anchor link for: simple-binary-encoding"><i class="fas fa-link"></i></a> 
+</h3>
+<p>SBE requires a separate paragraph on its own. The format uses a very interesting &quot;zero-copy&quot; approach which gives the best speed results by far. This gives not only the best throughput but also the lowest latency (not measured in this particular benchmark). Zero-copy means that it tries to avoid costly encode/decode steps and reuse pre-allocated objects/buffers.</p>
+<p><strong>SBE allocation graph:</strong></p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/sbe_allocation.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/sbe_allocation.png" alt="SBE allocation flamegraph">
+  </a>
+</div>
+<p><strong>Protobuf allocations for comparison:</strong></p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/protobuff_allocation_serialization.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/protobuff_allocation_serialization.png" alt="Protobuf allocation flamegraph">
+  </a>
+</div>
+<p>Provided that we can make full use of that and don't do any unnecessary copying in the business logic (and apply a few more performance tricks) it's possible to achieve outstanding results, all on a single pinned thread.</p>
+<p>Unfortunately this comes at a price of usability: schema is very extensive and verbose, reading/writing requires operating on Bytes/Buffers semi-directly, and the marriage with business logic is also quite cumbersome. At least infamous XML has good tooling/IDE support out of the box. I'd say it might be a reasonable price to pay if speed is the dominant requirement and we have lots of time.</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/sbe_schema.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/sbe_schema.png" alt="Simple binary encoding schema">
+  </a>
+</div>
+<p>There are other &quot;zero-copy&quot; formats like <strong>Cap'n Proto</strong> and <strong>FlatBuffers</strong>, maybe these are slightly more user-friendly. Though, it's not obvious how to make it more convenient without sacrificing performance.</p>
+<h3 id="why-benchmarking-is-tricky-part-1-client-usage">Why benchmarking is tricky part 1: Client usage<a class="zola-anchor" href="#why-benchmarking-is-tricky-part-1-client-usage" aria-label="Anchor link for: why-benchmarking-is-tricky-part-1-client-usage"><i class="fas fa-link"></i></a> 
+</h3>
+<p>Even a single client can be used in multiple ways, this is especially acute in case of Avro where <em>the naive</em> usage provides speeds on par with JSON, but two relatively minor changes can give us 2.5x improvement:</p>
+<p>'Typical/pure' Avro serialization usage: <strong>1132 ± 27 ops/ms</strong></p>
+<p>When we take a look at CPU flame graph it becomes obvious what's the problem:</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/avro_pre_builder_reuse.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/avro_pre_builder_reuse.png" alt="Avro pre flamegraph">
+  </a>
+</div>
+<p>In the naive implementation we spend half the time for builders recreation on each pass. Results after introducing message builder and bytebuffer reuse:</p>
+<p>Avro serialization with optimizations: <strong>2550 ± 109 ops/ms</strong></p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/avro_post_fix.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/avro_post_fix.png" alt="Avro post flamegraph">
+  </a>
+</div>
+<p>Much better. Interestingly, reusing builders in Protobuf Java implementation is counterproductive and yields similar performance results.</p>
+<p>That's one of the reasons benchmarking on your own is important, even if someone achieves poor results in their application it doesn't mean that you must suffer the same fate in your system.</p>
+<h3 id="why-benchmarking-is-tricky-part-2-schema-impact">Why benchmarking is tricky part 2: Schema impact<a class="zola-anchor" href="#why-benchmarking-is-tricky-part-2-schema-impact" aria-label="Anchor link for: why-benchmarking-is-tricky-part-2-schema-impact"><i class="fas fa-link"></i></a> 
+</h3>
+<p>Assuming we get reasonably reliable results it's still not so easy to apply it in real world. Let's say that we use the abovementioned benchmarks to guide our choices, let's say that for our requirements Protobuf is too slow. In practice, it turns out that most or all of our data is represented by doubles, if we do the benchmark we get:</p>
+<pre style="background-color:#fdf6e3;">
+<code class="language-protobuf" data-lang="protobuf"><span style="color:#657b83;">message DoublesMsg {
+  double double1 = 1;           // 1.1234567899
+  double double2 = 2;           // 2.1234567899
+  double double3 = 3;           // 3.1234567899
+  double double4 = 4;           // 4.1234567899
+  double double5 = 5;           // 5.1234567899
+  repeated double doubles = 6;  // [1.132314, 2.111111, 3.314155, 4.1231488, 5.12395832]
+}
+</span></code></pre><div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/table_doubles.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/table_doubles.png" alt="Doubles benchmark">
+  </a>
+</div>
+<p>Explanation for enormous speed up for Protobuf, and lack of any change for JSON is probably obvious for an attentive engineer. Logic behind this is left as an exercise for the reader.</p>
+<p>Hint, benchmarks with comparable string-only data size when serialized to JSON:</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-04-04-wire-formats/table_string.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-04-04-wire-formats/table_string.png" alt="Strings benchmark">
+  </a>
+</div>
+<h3 id="micro-benchmarking-is-it-worth-it">Micro-benchmarking, is it worth it?<a class="zola-anchor" href="#micro-benchmarking-is-it-worth-it" aria-label="Anchor link for: micro-benchmarking-is-it-worth-it"><i class="fas fa-link"></i></a> 
+</h3>
+<p>All problems with doing such micro-benchmarks make me wonder how much value they provide. I guess they are a good hint at what can potentially perform well, nonetheless I believe that doing a production-like end-to-end performance testing is necessary anyway - it's far too easy to make a small mistake in business logic that completely trumps any gains from faster serialization framework.</p>
+<p>Benchmarking, especially <strong>comparison when we aren't experts in a given technology, is hard</strong>: usually it's advised to write two versions alongside and check differences, but even in only slightly more complex scenarios <strong>writing two <em>same</em> versions might be a non-obvious task</strong>.</p>
+<p>In the end, does it really make any difference?
+Well, for high frequency trading it can be of paramount importance when end-to-end processing time is typically measured in microseconds (even 10s of microseconds - without using FPGAs/ASICs).
+On the other hand, if business logic takes milliseconds, or it does disk I/O, or it makes external calls, then serialization time <strong>might be on par with measurement error.</strong></p>
+<p>Having spent a few days toying with different formats and clients I settled with Protobuf. I was tempted to give SBE a try hoping that I could come up with a seamless abstraction over the client - but it doesn't seem to have good clients outside of Java and C++.
+Protobuf definitely isn't the fastest, but it seems to provide a good balance between performance and usability/time-to-market. On top of that, due to its ubiquity it's almost as easy to find performant clients in any language as it is for JSON.</p>
+<p>In the future it might be useful to extend my benchmarks to measure performance per payload size, after all serialization/deserialization might not scale linearly i.e. due to implementation details.</p>
+<h4 id="footnotes">Footnotes<a class="zola-anchor" href="#footnotes" aria-label="Anchor link for: footnotes"><i class="fas fa-link"></i></a> 
+</h4>
+<ol>
+<li><a href="https://github.com/laeith/playground/tree/master/src/main/java/com/laeith/playground/wire">Benchmarks codebase</a></li>
+<li><a href="https://github.com/jvm-profiling-tools/async-profiler">Async profiler for performance investigation</a></li>
+<li><a href="https://capnproto.org/news/2014-06-17-capnproto-flatbuffers-sbe.html">Zero-copy formats overview by kentonv</a></li>
+</ol>
+
+
+    </section>
+    <footer>
+        <nav class="c-pagination p-pagination">
+            <div class="c-pagination__ctrl">
+                <div class="c-pagination__newer">
+                    <a href="https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;">Service based systems - writing tests to ensure quality and avoid staleness</a>
+                </div>
+                <div class="c-pagination__older">
+                    <a href="https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-03-03-how-to-create-a-blog&#x2F;">Do you want to create a blog?</a>
+                </div>
+            </div>
+        </nav>
+    </footer>
+</article>
+        </main>
+
+        <div class="p-copyright">
+          <p class="p-menu evenly-spaced">
+            <a href="/other/about">About</a>
+            <a href="/other/archive">Archive</a>
+
+          </p>
+        </div>
+
+     
+      <footer class="l-footer">
+          <p class="p-copyright">
+            Marcin Mazurkiewicz <br/>
+              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+              Attribution 4.0 International License</a></p>
+      </footer>
+
+       
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;css&#x2F;katex.min.css">
+      <script defer src="https:&#x2F;&#x2F;www.laeith.com&#x2F;js&#x2F;katex.min.js"></script>
+      <script defer src="https:&#x2F;&#x2F;www.laeith.com&#x2F;js&#x2F;mathtex-script-type.min.js"></script>
+    </body>
+</html>
+            

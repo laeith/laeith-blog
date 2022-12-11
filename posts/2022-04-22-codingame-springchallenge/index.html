@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+        <title>Codingame - Spring Challenge | Tapestry</title>
+<meta property="og:title" content="Codingame - Spring Challenge | Tapestry" />
+<meta name="twitter:title" content="Codingame - Spring Challenge | Tapestry" />
+
+        <meta name="description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+        <meta property="og:description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+        <meta name="twitter:description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+
+        <meta property="og:site_name" content="Tapestry" />
+        <meta property="og:url" content="https:&#x2F;&#x2F;www.laeith.com" />
+
+        
+
+
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;base.css" />
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;fontawesome.css" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;brands.css" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;solid.css" rel="stylesheet">
+
+        <link rel='icon' type='image/x-icon' href="https:&#x2F;&#x2F;www.laeith.com&#x2F;favicon.ico" />
+
+        <link rel="alternate" type="application/atom+xml" title="Tapestry" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;atom.xml">
+
+        
+
+    </head>
+    <body class="l-body">
+        <a href="#main" class="skip-link p-screen-reader-text">Skip to content</a>
+        <header class="l-header">
+            <h1 class="c-title p-title"><a href="https:&#x2F;&#x2F;www.laeith.com" class="p-title__link">Tapestry</a></h1>
+            <p class="p-subtitle">
+                weave until it hopefully makes sense
+            </p>
+            </header>
+
+        <main id="main" class="l-main">
+            
+<article class="p-article">
+        <h1>Codingame - Spring Challenge</h1>
+            <div class="c-time">
+                <time datetime="2022-05-13">
+                    2022-05-13
+                </time>
+            </div>
+    
+    <section id="js-article" class="p-article__body">
+        
+    <p>Last week <a href="https://www.codingame.com/home">CodinGame.com</a> hosted a Spring Challenge, it's a 10-day bot programming
+competition that I gave a try and wanted to share my thoughts.</p>
+<p>The contest is held yearly and this time about ~8000 people participated with at least a single submission. The idea revolves
+around creating an AI for a game - in this particular case the goal is trivial: protect your base and outlive your
+opponent.
+Players start at opposite corner of the map and control a team of 3 heroes while monsters randomly spawn at the edges
+and regularly attack bases, if a monster reaches one's base it deals damage. Heroes can kill monsters, gain 'mana' for
+each damage dealt and can cast a few spells.</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/play-opt.gif" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/play-opt.gif" alt="Spring Challenge 2022 Playing">
+  </a>
+</div>
+<p>I always wanted to do something similar locally, i.e. code a simple game and create an AI for that, ideally
+leveraging massive number of simulations. Except for controlling the environment itself, CodinGame checks pretty much all required
+boxes, and it works in a multiplayer mode! I intended to spend only a few hours to find out how polished the
+platform is - <strong>to my surprise when 3 days later I clocked in ~10h+.</strong> Delight at its finest.</p>
+<p><strong>This was my first try at such type of contests so whatever you read here should be taken a with a grain of salt.</strong>
+Having said that, let me describe the road I took to get to Gold league - it should be quite representative of what
+one can expect from such events.</p>
+<h3 id="wood-leagues">Wood leagues<a class="zola-anchor" href="#wood-leagues" aria-label="Anchor link for: wood-leagues"><i class="fas fa-link"></i></a> 
+</h3>
+<p>I started with the simplest tactic one can imagine: find the closest monster to my base and attack it with all we got.
+Hard to get simpler... yet it turned out to be an effective approach. My take on that is that everyone
+already moved to more efficient approaches but haven't managed to fully implement them yet.</p>
+<p>Let's improve it and assign a single hero to a single monster. I also noticed a pretty severe bug in my trivial implementation -
+turns out that when sides are changed (roughly half matches) own hero identifiers change i.e. 0-2 on Blue side and 3-5
+on Red side. <em>Yes, it meant that I was loosing half games instantly [cough, cough].</em></p>
+<p><em>This got me into Bronze, ~TOP 2500</em></p>
+<h3 id="bronze-leagues">Bronze leagues<a class="zola-anchor" href="#bronze-leagues" aria-label="Anchor link for: bronze-leagues"><i class="fas fa-link"></i></a> 
+</h3>
+<p>New league, new toys. They gave us a few spells and introduced a fog of war. Because both bases were always out of fog
+of war and my brave heroes were always going for the closed 'visible' monster... they tended to run mindlessly into
+enemy base if all monsters on my side were killed. Additionally, enemies started using spells and more sophisticated
+tactics e.g. 2 defenders and 1 attacker. The first shift of meta.</p>
+<p>Another set of naive improvements - let's ignore enemies further than X distance from my base.</p>
+<p>This improved my score only slightly, I jumped about 200 positions and noticed that some games end with timeout where
+player with higher 'wild mana' wins (wild mana - mana gathered outside own base), given that my folk usually stay within
+base it's hard to win anything that ended due to round limit.</p>
+<p><em>Bronze, TOP ~2300</em></p>
+<p>Coded basic 2-defender-1-attacker tactic, Also started using 'Control' spell on all monsters within range that are not
+heading towards enemy base and have more than 14 health points (Control spell forces a unit to move towards a given
+direction). Ignore fog of war for now.</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/full_game.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/full_game.png" alt="Spring Challenge 2022 Playing">
+  </a>
+</div>
+<p><em>Submitted a new version, got to Bronze ~1500 and went to sleep. Got promoted to Silver overnight.</em></p>
+<h3 id="silver-leagues-and-the-road-to-gold">Silver leagues and the road to Gold<a class="zola-anchor" href="#silver-leagues-and-the-road-to-gold" aria-label="Anchor link for: silver-leagues-and-the-road-to-gold"><i class="fas fa-link"></i></a> 
+</h3>
+<p>About 2000 players were moved to Silver with me, not bad. My solution was very hacky at this point, and opponents were
+getting fancier with their solutions all the time. After fixing a few more issues with defenders (e.g. they tended to
+stick a little too close to the middle, wasting too much time on random monsters spawning next to my base). This didn't
+do much for my overall score, top ~1300.</p>
+<p>I decided that it's time for a big bang rewrite as the approach is not too flexible. After another hour I was in
+slightly better shape with fewer magic ifs, functions and random numbers. Got back to working
+on strategy and tactics again, this time I wanted to invest more upfront before submitting my version for evaluation.</p>
+<p>Major changes:</p>
+<ul>
+<li>Introduced 'stances', so that I could dynamically change behaviour e.g. DEFENDER, MIDDLE ROAM, ATTACKER, DIVE etc.</li>
+<li>My 'Attacker' started farming in the middle and only around 80th turn moved into an offensive position.</li>
+<li>Attacker learned new tricks:
+<ul>
+<li>e.g. Wind + Shield spell combo</li>
+<li>Shield monsters aggressively if they are healthy and close to enemy base (so that enemies can't Wind them anymore)</li>
+</ul>
+</li>
+<li>Defender improvements:
+<ul>
+<li>use Wind a lot more, prioritize it over everything else if monster is not shielded</li>
+<li>use Control very aggressively, turned out that if I'm Controlling my side of map well enough then opponents can't
+utilize their offensive positions</li>
+</ul>
+</li>
+</ul>
+<p>This got me into top 70 (TOP 7 in Poland) and Gold league was opened on the following day!
+Seemed very promising given that I still could think of plenty improvements on both def and off sides (better combos,
+better farming, less reliant on magic numbers, better timing for offense, take enemy position into account when
+defending, number of enemies, simulations, local-system parameter evaluation etc.), plus my implementation was... less
+than ideal.</p>
+<p>Then I had to take a break for a few days. In fact that was my final submission.</p>
+<p><em>Day 3/4: Top 70</em></p>
+<p>Over time my AI started loosing its appeal, people caught up and even surpassed my score. Eventually, I ended the
+competition in top 800 a week later without any additional submissions.</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/chrome_lGriSiCTFb.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2022-04-22-codingame-springchallenge/chrome_lGriSiCTFb.png" alt="Spring Challenge 2022 Playing 2">
+  </a>
+</div>
+<h3 id="post-mortem">Post-mortem<a class="zola-anchor" href="#post-mortem" aria-label="Anchor link for: post-mortem"><i class="fas fa-link"></i></a> 
+</h3>
+<p>This was a very interesting venture into the classic engineering loop:</p>
+<p><strong>observe -&gt; think/measure -&gt; improve -&gt; observe</strong></p>
+<p>Enjoyment was absurdly high. Albeit, I felt a little disappointed when my AI got demoted into TOP 800 (out
+of ~8k participants) during my absence - I was hoping for a better final placement despite my inactivity!
+Anyway, probably still a reasonable placement for a first timer.</p>
+<p>It scratched my competitive side a lot. Next time I need to set up a better schedule so that I have enough time to at 
+least give it a full try.</p>
+<p><strong>A few final thoughts about the game itself:</strong></p>
+<ul>
+<li>Importance of time, especially during the finish, meta changes and converges only at the end and the best
+implementation wins, almost all people from Top 20 ended up using the same tactic.</li>
+<li>The 'problem' that current meta impacts our evaluation hugely, i.e. an approach that does well right now vs currently
+dominant tactics will do bad job 3 days later when people switch.
+<ul>
+<li>So maybe it's not worth investing into specific tactics initially and only fine-tune it during later stages?</li>
+</ul>
+</li>
+<li>Talking about meta and strategy, this went unexpectedly complex very quickly:
+<ul>
+<li>Attacking is easier than defending, it's also easier to execute properly and yields better results quickly</li>
+<li>Have a funky tactic and win 70%+ games because you abuse some mechanic or try to create a more general approach
+that, if executed well, technically, could beat everyone?
+<ul>
+<li>What about CG matchmaking system? Which approach is more valued there? Win 70% vs general population vs win
+80% against top players but only 60% vs general population?</li>
+</ul>
+</li>
+<li>But that well-executed general approach would be complex - do I have enough time to do it? Is it possible during a
+10-day contest at all?</li>
+</ul>
+</li>
+</ul>
+
+
+    </section>
+    <footer>
+        <nav class="c-pagination p-pagination">
+            <div class="c-pagination__ctrl">
+                <div class="c-pagination__newer">
+                    
+                </div>
+                <div class="c-pagination__older">
+                    <a href="https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-06-17-software-testing&#x2F;">Service based systems - writing tests to ensure quality and avoid staleness</a>
+                </div>
+            </div>
+        </nav>
+    </footer>
+</article>
+        </main>
+
+        <div class="p-copyright">
+          <p class="p-menu evenly-spaced">
+            <a href="/other/about">About</a>
+            <a href="/other/archive">Archive</a>
+
+          </p>
+        </div>
+
+     
+      <footer class="l-footer">
+          <p class="p-copyright">
+            Marcin Mazurkiewicz <br/>
+              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+              Attribution 4.0 International License</a></p>
+      </footer>
+
+       
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;css&#x2F;katex.min.css">
+      <script defer src="https:&#x2F;&#x2F;www.laeith.com&#x2F;js&#x2F;katex.min.js"></script>
+      <script defer src="https:&#x2F;&#x2F;www.laeith.com&#x2F;js&#x2F;mathtex-script-type.min.js"></script>
+    </body>
+</html>
+            

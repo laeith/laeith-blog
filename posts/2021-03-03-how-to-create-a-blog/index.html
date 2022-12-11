@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+        <title>Do you want to create a blog? | Tapestry</title>
+<meta property="og:title" content="Do you want to create a blog? | Tapestry" />
+<meta name="twitter:title" content="Do you want to create a blog? | Tapestry" />
+
+        <meta name="description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+        <meta property="og:description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+        <meta name="twitter:description" content="A blog about many things, including but not only: computer science, philosophy, economics, mathematics, foundational work">
+
+        <meta property="og:site_name" content="Tapestry" />
+        <meta property="og:url" content="https:&#x2F;&#x2F;www.laeith.com" />
+
+        
+
+
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;base.css" />
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;fontawesome.css" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;brands.css" rel="stylesheet">
+        <link href="https:&#x2F;&#x2F;www.laeith.com&#x2F;fontawesome&#x2F;solid.css" rel="stylesheet">
+
+        <link rel='icon' type='image/x-icon' href="https:&#x2F;&#x2F;www.laeith.com&#x2F;favicon.ico" />
+
+        <link rel="alternate" type="application/atom+xml" title="Tapestry" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;atom.xml">
+
+        
+
+    </head>
+    <body class="l-body">
+        <a href="#main" class="skip-link p-screen-reader-text">Skip to content</a>
+        <header class="l-header">
+            <h1 class="c-title p-title"><a href="https:&#x2F;&#x2F;www.laeith.com" class="p-title__link">Tapestry</a></h1>
+            <p class="p-subtitle">
+                weave until it hopefully makes sense
+            </p>
+            </header>
+
+        <main id="main" class="l-main">
+            
+<article class="p-article">
+        <h1>Do you want to create a blog?</h1>
+            <div class="c-time">
+                <time datetime="2021-03-03">
+                    2021-03-03
+                </time>
+            </div>
+    
+    <section id="js-article" class="p-article__body">
+        
+    <p>Do you want to write an article or two? Sounds great, but one will inevitably face the main problem - where to start?
+Turns out there are many ways to start, fortunately most of them seem to have relatively obvious trade-offs.</p>
+<h3 id="basic-requirements">Basic requirements<a class="zola-anchor" href="#basic-requirements" aria-label="Anchor link for: basic-requirements"><i class="fas fa-link"></i></a> 
+</h3>
+<p>Fom the very start I knew that this must be simple, not only because of my poor web skills but also because I didn't really want to spend much time on the technical side.</p>
+<p>I had only a few requirements that can be summed up as:</p>
+<ul>
+<li>Low-effort, mostly works out of the box</li>
+<li>Must be local friendly, I really want to have the content on my disk</li>
+<li>Usable with version control system</li>
+<li>Preferably based on Markdown with basic support for images, syntax highlighting, linking etc.</li>
+</ul>
+<p>There are many options out there, starting from a fully featured, ready-to-use platforms like <a href="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/www.medium.com">medium</a> with WYSIWYG interface through static-site generators (SSG) and ending with custom DIY solutions.</p>
+<h3 id="fully-featured-hosted-solutions-medium-com-dev-to-etc">Fully featured, hosted solutions - medium.com, dev.to etc.<a class="zola-anchor" href="#fully-featured-hosted-solutions-medium-com-dev-to-etc" aria-label="Anchor link for: fully-featured-hosted-solutions-medium-com-dev-to-etc"><i class="fas fa-link"></i></a> 
+</h3>
+<p>Probably the most common hosted solution is Medium, there are a few other choices in this category (e.g. Blogger) but they mostly share the same problems. Paradoxically, the main problem with these solutions is that they must somehow make money but running a blogging platform... seems to be a very hard business. Medium launched in 2012 and <a href="https://www.niemanlab.org/2019/03/the-long-complicated-and-extremely-frustrating-history-of-medium-2012-present/">apparently seven years later they still can't make it even.</a></p>
+<p>Since publishing is free, and they really have to make at least some money to make the business viable they went after readers, either directly or by gathering data about them.
+This unfortunately sooner or later leads to questionable decisions, like welcoming readers with such atrocities:</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/medium_banner.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/medium_banner.png" alt="Medium welcoming banner">
+  </a>
+</div>
+<p>Not to mention the nagging to download their mobile app, popping social media integrations, <em>almost</em> working RSS.</p>
+<p>On the upside, theoretically, such platforms should make it easier to promote new blogs, make it easy to reach new audiences.
+That's probably a lot of value if one wants to commercialize writing. I would also say that the easy of use for publishers is a huge
+benefit - no hosting, not so much tweaking etc. Especially for non-tech-savvy people sounds like a good deal. </p>
+<h3 id="static-site-generator-gatsby-jekyll-zola-hugo-pelican-and-others">Static site generator - Gatsby, Jekyll, Zola, Hugo, Pelican and others<a class="zola-anchor" href="#static-site-generator-gatsby-jekyll-zola-hugo-pelican-and-others" aria-label="Anchor link for: static-site-generator-gatsby-jekyll-zola-hugo-pelican-and-others"><i class="fas fa-link"></i></a> 
+</h3>
+<p>This is an interesting niche, looks like static site generators exploded during last decade, there are so many that it's even hard to enumerate them. One can probably find an SSG written in every single popular language, sometimes even a few. It's an almost perfect solution for software engineers and tech tinkerers, it's also this type of software that is probably fun to write (probably the reason for huge population).</p>
+<p>Static site generator is an application that creates raw HTML pages from different templates/components. This is a simple alternative to bigger systems such as Wordpress or Drupal. The sheer beauty of such solutions lies in simplicity (given at least basic programming skills), we download a sample theme, create a few Markdown-based articles and press 'generate'. 
+A few milliseconds later we get a directory fully of static webpages ready to be deployed, at least in theory.</p>
+<p>There are two main distractions faced up-front:</p>
+<ol>
+<li>Initial configuration</li>
+<li>Deployment</li>
+</ol>
+<p>There is definitely <em>some</em> cost that needs to be paid up-front, this is especially true for the configuration part. I'd strongly recommend generators that provide single binaries. It makes it trivial to get everything up and running:</p>
+<div class="post__image">
+  <a href="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/zola_serve.png" class="image-link" target="_blank">
+    <img src="https://www.laeith.com/posts/2021-03-03-how-to-create-a-blog/zola_serve.png" alt="Zola serve">
+  </a>
+</div>
+<p>On top of simplicity <strong>we get consistency</strong>, I used to toy a little with Python-based solution &quot;Pelican&quot;, getting it up and running tends to be an irregular experience - installing Python, getting pip, getting dependencies and finally running efforts might vary from very straightforward to a multi-hour battle (Python2 clashes with Python3, pip missing/clashes, incorrect dependencies, setting up virtual environments, trying to build old blogs that didn't have version specified...). With single-binary solution we can put it into a repository and forget about all these problems once and for all.</p>
+<p>Unfortunately the remaining part of configuration is more time-demanding, picking a starting theme, understanding template engine, doing basic modifications and making sure that everything works (images, syntax highlighting, shortcodes, archive) is a few hours effort at the minimum.</p>
+<p>Surprisingly, because the end product we get is a bunch of static files It's trivial to get it up and running in public - the market is big enough to have many quick solutions ready, to name a few: Netlify, GitGub Pages, GitLab Pages... with SSGs having documentation for each major platform - e.g. <a href="https://www.getzola.org/documentation/deployment/github-pages/">Zola for GitHub Pages</a></p>
+<h3 id="fully-dyi-approach-creating-a-blog-platform-from-scratch">Fully DYI approach, creating a blog platform from scratch<a class="zola-anchor" href="#fully-dyi-approach-creating-a-blog-platform-from-scratch" aria-label="Anchor link for: fully-dyi-approach-creating-a-blog-platform-from-scratch"><i class="fas fa-link"></i></a> 
+</h3>
+<p>I believe that unless you're trying to create a feature rich portal with potential of having lots of custom features, at least the size of <a href="https://www.artofmanliness.com/">Art of Manliness</a> you shouldn't even think about it. Even then it's probably better to start with something dirty and quick, only eventually moving to a custom solution.</p>
+<p>Something that I outright crossed as a no-go. There is no way I would be able to justify time spent on creating a blogging platform from scratch, this sounds like a great idea for a 1st year student that wants to be a front-end developer - and I'm not entirely sure about that either.</p>
+<h3 id="final-words">Final words<a class="zola-anchor" href="#final-words" aria-label="Anchor link for: final-words"><i class="fas fa-link"></i></a> 
+</h3>
+<p>Having evaluated most choices I settled with an SSG - <a href="https://github.com/getzola/zola">Zola</a>, I'm not sure if it's much better than e.g. Hugo as both provide very polished basic functionality and I don't really have any use for the more advanced ones. Hugo is definitely better when it comes to the number of templates readily available, Zola is a much younger project. Ruby fans should take a closer look at <a href="https://github.com/jekyll/jekyll">Jekyll</a> and Python professionals might be content with <a href="https://github.com/getpelican/pelican/">Pelican.</a>
+Because all of them support Markdown it shouldn't be that hard to switch (assuming simple templates) if something goes wrong.</p>
+<p>This might not be the best choice for people that 'just want to start blogging, <strong>right now</strong>', for such people I'd recommend looking into hosted solutions like Medium or Blogger. Yes, they have their problems but sometimes nothing beats ease of use. People, especially programmers tend to underappreciate how much time can be saved with not perfect but perfectly good-enough solutions.</p>
+<p>On the other hand static site generators seem to be the best choice for novice, tech-savvy bloggers, especially if they don't really want to make money out of it. So far I'm quite pleased with my choice.</p>
+
+
+    </section>
+    <footer>
+        <nav class="c-pagination p-pagination">
+            <div class="c-pagination__ctrl">
+                <div class="c-pagination__newer">
+                    <a href="https:&#x2F;&#x2F;www.laeith.com&#x2F;posts&#x2F;2021-04-04-wire-formats&#x2F;">Wire formats - comparison &amp; benchmarking</a>
+                </div>
+                <div class="c-pagination__older">
+                    
+                </div>
+            </div>
+        </nav>
+    </footer>
+</article>
+        </main>
+
+        <div class="p-copyright">
+          <p class="p-menu evenly-spaced">
+            <a href="/other/about">About</a>
+            <a href="/other/archive">Archive</a>
+
+          </p>
+        </div>
+
+     
+      <footer class="l-footer">
+          <p class="p-copyright">
+            Marcin Mazurkiewicz <br/>
+              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+              Attribution 4.0 International License</a></p>
+      </footer>
+
+       
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;www.laeith.com&#x2F;css&#x2F;katex.min.css">
+      <script defer src="https:&#x2F;&#x2F;www.laeith.com&#x2F;js&#x2F;katex.min.js"></script>
+      <script defer src="https:&#x2F;&#x2F;www.laeith.com&#x2F;js&#x2F;mathtex-script-type.min.js"></script>
+    </body>
+</html>
+            
